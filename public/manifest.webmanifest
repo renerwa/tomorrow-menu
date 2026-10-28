@@ -1,0 +1,10 @@
+{
+  "name": "明日菜单",
+  "short_name": "明日菜单",
+  "description": "家庭 AI 晚餐排程",
+  "start_url": "/planner",
+  "display": "standalone",
+  "background_color": "#f4ebdd",
+  "theme_color": "#1e2b24",
+  "icons": []
+}

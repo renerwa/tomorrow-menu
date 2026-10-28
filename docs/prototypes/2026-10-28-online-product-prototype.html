@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>明日菜单 · 线上产品原型</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700;900&display=swap');
+:root{--paper:#f4ebdd;--paper-deep:#e8dbc7;--paper-light:#fffbf3;--ink:#1e2b24;--ink-soft:#5f6b61;--line:rgba(30,43,36,.14);--chili:#c84a2e;--chili-deep:#9e3520;--mustard:#d5a33c;--sage:#7a8a6a;--display:"Noto Serif SC","Songti SC","STSong","SimSun",serif;--body:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font-family:var(--body);color:var(--ink);background:radial-gradient(circle at 18% 12%,rgba(213,163,60,.12),transparent 32%),radial-gradient(circle at 82% 82%,rgba(200,74,46,.10),transparent 36%),#18201b;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");mix-blend-mode:soft-light}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid var(--mustard);outline-offset:2px}
+.stage{min-height:100vh;display:flex;align-items:center;justify-content:center;gap:74px;padding:48px}
+.brief{width:430px;color:var(--paper);position:relative}.brief::after{content:"";position:absolute;width:230px;height:230px;right:-40px;top:-50px;border:1px solid rgba(213,163,60,.22);border-radius:50%;pointer-events:none}
+.eyebrow{display:block;font-size:10px;letter-spacing:.2em;color:var(--mustard);text-transform:uppercase}
+.brief h1{font-family:var(--display);font-size:72px;line-height:1.04;letter-spacing:-.04em;margin:18px 0 16px;font-weight:900}
+.brief .lede{font-family:var(--display);font-size:17px;line-height:1.85;color:rgba(244,235,221,.78);margin:0 0 30px;max-width:370px}
+.flow{border-top:1px solid rgba(244,235,221,.15)}.flow-step{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:15px 0;border-bottom:1px solid rgba(244,235,221,.12)}
+.flow-step b{font-family:var(--display);font-size:13px;color:var(--mustard);font-weight:500}.flow-step strong{display:block;font-family:var(--display);font-size:15px;margin-bottom:3px;letter-spacing:.02em}.flow-step span{display:block;font-size:11px;line-height:1.6;color:rgba(244,235,221,.58)}
+.change-note{margin-top:24px;padding:16px 18px;border:1px solid rgba(213,163,60,.28);background:rgba(213,163,60,.06);border-radius:14px}.change-note>span{display:block;font-size:10px;color:var(--mustard);letter-spacing:.12em}.change-note strong{display:block;font-family:var(--display);font-size:19px;margin:4px 0 8px}.change-note ul{margin:0;padding-left:16px;color:rgba(244,235,221,.65);font-size:11px;line-height:1.8}.hint{margin-top:20px;font-size:11px;color:rgba(244,235,221,.38)}
+.device-wrap{position:relative;flex:0 0 auto}.phone{width:390px;height:844px;border-radius:46px;padding:9px;background:#0d1310;box-shadow:0 40px 90px rgba(0,0,0,.44),0 0 0 1px rgba(255,255,255,.08),inset 0 0 0 1px rgba(255,255,255,.04);position:relative}
+.phone::before{content:"";position:absolute;z-index:12;top:15px;left:50%;transform:translateX(-50%);width:104px;height:26px;border-radius:18px;background:#0d1310}
+.phone-inner{position:relative;height:100%;border-radius:38px;overflow:hidden;background:var(--paper);display:flex;flex-direction:column;box-shadow:inset 0 0 0 1px rgba(30,43,36,.08)}
+.statusbar{height:44px;flex:0 0 auto;display:flex;align-items:flex-end;justify-content:space-between;padding:0 24px 8px;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--ink);position:relative;z-index:3}
+.signal{display:flex;gap:4px;align-items:center}.signal i{display:block;width:3px;border-radius:2px;background:var(--ink)}.signal i:nth-child(1){height:4px;opacity:.45}.signal i:nth-child(2){height:7px;opacity:.65}.signal i:nth-child(3){height:10px;opacity:.85}.signal i:nth-child(4){height:13px}
+.battery{width:20px;height:10px;border:1px solid var(--ink);border-radius:3px;position:relative;margin-left:6px}.battery::after{content:"";position:absolute;right:-3px;top:3px;width:2px;height:4px;border-radius:1px;background:var(--ink)}.battery i{display:block;height:6px;margin:1px;width:13px;background:var(--ink);border-radius:1px}
+.app{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 18px 108px;scrollbar-width:none}.app::-webkit-scrollbar{display:none}
+.screen{display:none}.screen.active{display:block;animation:screenIn .3s ease both}@keyframes screenIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:4px 0 18px}.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--display);font-size:21px;box-shadow:inset 0 0 0 2px rgba(244,235,221,.18)}
+.brand strong{display:block;font-family:var(--display);font-size:16px;letter-spacing:.08em}.brand small{display:block;margin-top:2px;color:var(--ink-soft);font-size:10px}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:rgba(255,251,243,.58);color:var(--ink);display:grid;place-items:center;padding:0}.icon-btn svg{width:18px;height:18px}
+.date-row{display:flex;align-items:flex-end;justify-content:space-between;margin:8px 0 18px}.date-row h2{font-family:var(--display);font-size:34px;line-height:1;letter-spacing:-.03em;margin:7px 0 0;font-weight:900}
+.date-pill{border:1px solid var(--line);background:rgba(255,251,243,.5);color:var(--ink-soft);border-radius:999px;padding:8px 12px;font-size:11px}
+.ai-card{position:relative;overflow:hidden;background:var(--ink);color:var(--paper);border-radius:22px;padding:18px;margin-bottom:22px;box-shadow:0 14px 30px rgba(30,43,36,.18)}
+.ai-card::before{content:"";position:absolute;inset:0;opacity:.16;background-image:linear-gradient(rgba(244,235,221,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(244,235,221,.22) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom right,#000,transparent 70%)}
+.ai-card>*{position:relative;z-index:1}.ai-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.ai-label{display:inline-flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.14em;color:var(--mustard)}.ai-label i{width:6px;height:6px;border-radius:50%;background:#9fc27e;box-shadow:0 0 0 4px rgba(159,194,126,.13)}
+.stamp{width:48px;height:48px;border:1px solid rgba(213,163,60,.62);border-radius:50%;display:grid;place-items:center;text-align:center;font-family:var(--display);font-size:11px;line-height:1.15;color:var(--mustard);transform:rotate(8deg);flex:0 0 auto}
+.ai-lead{font-family:var(--display);font-size:17px;line-height:1.7;letter-spacing:.02em;margin:14px 0 16px}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding-top:14px;border-top:1px solid rgba(244,235,221,.14)}.stat-row b{display:block;font-family:var(--display);font-size:24px;line-height:1;color:var(--mustard);font-weight:500}.stat-row span{display:block;margin-top:4px;font-size:9px;color:rgba(244,235,221,.55)}
+.text-link{margin-top:14px;padding:0;border:0;background:none;color:var(--paper);display:inline-flex;align-items:center;gap:6px;font-size:11px;opacity:.82}.text-link svg{width:13px;height:13px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 12px}.section-head h3{font-family:var(--display);font-size:18px;margin:0;letter-spacing:.02em}.section-head span{font-size:10px;color:var(--ink-soft)}
+.dish-list{display:flex;flex-direction:column;gap:9px}.dish{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:12px;align-items:center;background:rgba(255,251,243,.7);border:1px solid var(--line);border-radius:17px;padding:11px 12px;box-shadow:0 5px 16px rgba(30,43,36,.035)}
+.dish-art{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:23px;color:rgba(255,251,243,.96);position:relative;box-shadow:inset 0 0 0 4px rgba(255,255,255,.17),inset 0 0 0 5px rgba(30,43,36,.16),0 4px 10px rgba(30,43,36,.12)}.dish-art::after{content:"";position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(255,255,255,.26)}
+.dish[data-tone="fish"] .dish-art{background:radial-gradient(circle at 34% 28%,#9bb0a0,#4d695a 72%)}.dish[data-tone="beef"] .dish-art{background:radial-gradient(circle at 34% 28%,#cf765e,#8f3322 72%)}.dish[data-tone="veg"] .dish-art{background:radial-gradient(circle at 34% 28%,#b0bf88,#627547 72%)}.dish[data-tone="soup"] .dish-art{background:radial-gradient(circle at 34% 28%,#e0bd71,#a87425 72%)}
+.dish-info{min-width:0}.dish-top{display:flex;align-items:baseline;gap:6px}.dish-no{font-family:var(--display);font-size:9px;color:var(--chili);letter-spacing:.06em}.dish-name{font-family:var(--display);font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dish-note{margin-top:3px;font-size:10px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.tag{padding:2px 6px;border-radius:999px;background:rgba(30,43,36,.06);color:var(--ink-soft);font-size:8px;line-height:1.5}.tag.hot{background:rgba(200,74,46,.1);color:var(--chili)}.tag.good{background:rgba(122,138,106,.13);color:#536347}
+.swap{border:1px solid var(--line);background:transparent;color:var(--ink-soft);border-radius:999px;padding:7px 9px;font-size:10px;white-space:nowrap}.swap:active{background:rgba(30,43,36,.06)}
+.actions{display:grid;gap:8px;margin-top:18px}.btn{min-height:48px;border-radius:14px;border:0;font-size:13px;font-weight:700;letter-spacing:.04em}.btn-primary{background:var(--chili);color:#fff9ef;box-shadow:0 9px 20px rgba(200,74,46,.24)}.btn-primary:active{background:var(--chili-deep)}.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}.btn-small{min-height:38px;font-size:11px;border-radius:11px}
+.tiny-note{margin:12px 0 0;text-align:center;color:var(--ink-soft);font-size:9px;line-height:1.7}
+.lib-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 14px}.lib-stat{background:rgba(255,251,243,.62);border:1px solid var(--line);border-radius:14px;padding:10px}.lib-stat b{display:block;font-family:var(--display);font-size:22px;line-height:1;font-weight:500}.lib-stat span{display:block;margin-top:4px;font-size:9px;color:var(--ink-soft)}
+.search{display:flex;align-items:center;gap:8px;background:rgba(255,251,243,.7);border:1px solid var(--line);border-radius:13px;padding:0 12px;height:42px}.search svg{width:16px;height:16px;color:var(--ink-soft);flex:0 0 auto}.search input{width:100%;border:0;background:none;color:var(--ink);font-size:12px;outline:none}.search input::placeholder{color:rgba(95,107,97,.72)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:12px 0 14px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;border:1px solid var(--line);background:transparent;color:var(--ink-soft);border-radius:999px;padding:7px 10px;font-size:10px}.chip.active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.ai-callout{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 13px;background:rgba(213,163,60,.12);border:1px solid rgba(213,163,60,.32);border-radius:14px;margin-bottom:14px}.ai-callout strong{display:block;font-family:var(--display);font-size:13px}.ai-callout span{display:block;margin-top:2px;font-size:9px;color:var(--ink-soft)}.ai-callout button{flex:0 0 auto;border:0;border-radius:999px;background:var(--mustard);color:var(--ink);font-size:10px;font-weight:700;padding:8px 10px}
+.dish-rows{display:flex;flex-direction:column}.dish-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.dish-row:last-child{border-bottom:0}.dish-row strong{display:block;font-family:var(--display);font-size:14px}.dish-row small{display:block;margin-top:3px;color:var(--ink-soft);font-size:9px}.status{flex:0 0 auto;font-size:9px;border-radius:999px;padding:4px 7px;background:rgba(122,138,106,.13);color:#536347}.status.draft{background:rgba(213,163,60,.16);color:#8c6418}.status.off{background:rgba(30,43,36,.06);color:var(--ink-soft)}
+.menu-summary{background:var(--ink);color:var(--paper);border-radius:20px;padding:17px 18px;margin:2px 0 18px}.menu-summary h2{font-family:var(--display);font-size:21px;margin:7px 0 12px;font-weight:700}.summary-tags{display:flex;flex-wrap:wrap;gap:5px}.summary-tags span{border:1px solid rgba(244,235,221,.18);color:rgba(244,235,221,.8);border-radius:999px;padding:4px 8px;font-size:9px}
+.buy-group{margin-bottom:16px}.buy-group h3{display:flex;align-items:center;gap:7px;font-family:var(--display);font-size:14px;margin:0 0 7px}.buy-group h3::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--chili)}
+.check-row{display:flex;align-items:center;gap:10px;min-height:40px;border-bottom:1px solid rgba(30,43,36,.08);font-size:12px;cursor:pointer}.check-row input{position:absolute;opacity:0;pointer-events:none}.check-box{width:17px;height:17px;border:1px solid rgba(30,43,36,.28);border-radius:5px;display:grid;place-items:center;flex:0 0 auto;transition:.18s ease}.check-box::after{content:"";width:7px;height:4px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) scale(.5);opacity:0;transition:.18s ease}.check-row input:checked+.check-box{background:var(--chili);border-color:var(--chili)}.check-row input:checked+.check-box::after{opacity:1;transform:rotate(-45deg) scale(1)}.check-row input:checked~span:last-child{color:rgba(30,43,36,.38);text-decoration:line-through}.check-row .qty{margin-left:auto;font-size:9px;color:var(--ink-soft)}
+.pantry{margin:4px 0 16px;padding:12px 13px;border:1px dashed rgba(30,43,36,.2);border-radius:13px;background:rgba(255,251,243,.3)}.pantry summary{display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:10px;color:var(--ink-soft);list-style:none}.pantry summary::-webkit-details-marker{display:none}.pantry summary::after{content:"+";font-size:15px}.pantry[open] summary::after{content:"−"}.pantry-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}.pantry-tags span{font-size:9px;color:var(--ink-soft);background:rgba(30,43,36,.06);border-radius:999px;padding:4px 7px}
+.sticky-action{position:sticky;bottom:8px;padding-top:10px;background:linear-gradient(to bottom,rgba(244,235,221,0),var(--paper) 34%)}.sticky-action .btn{width:100%}
+.profile-card{background:var(--ink);color:var(--paper);border-radius:22px;padding:20px;margin:2px 0 18px;position:relative;overflow:hidden}.profile-card::after{content:"陈";position:absolute;right:12px;bottom:-26px;font-family:var(--display);font-size:110px;line-height:1;color:rgba(244,235,221,.06)}.profile-card h2{font-family:var(--display);font-size:25px;margin:8px 0 5px;font-weight:700}.profile-card p{margin:0;color:rgba(244,235,221,.6);font-size:11px}.profile-meta{display:flex;gap:6px;margin-top:14px;position:relative;z-index:1}.profile-meta span{border:1px solid rgba(244,235,221,.16);border-radius:999px;padding:5px 8px;font-size:9px;color:rgba(244,235,221,.78)}
+.setting-group{background:rgba(255,251,243,.55);border:1px solid var(--line);border-radius:16px;padding:0 14px;margin-bottom:14px}.setting-group h3{font-family:var(--display);font-size:13px;margin:14px 0 4px}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;border-bottom:1px solid rgba(30,43,36,.08);font-size:11px}.setting-row:last-child{border-bottom:0}.setting-row small{display:block;margin-top:2px;color:var(--ink-soft);font-size:9px}
+.switch{width:38px;height:22px;border-radius:999px;background:rgba(30,43,36,.15);position:relative;flex:0 0 auto;transition:.2s ease}.switch::after{content:"";position:absolute;width:16px;height:16px;top:3px;left:3px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.2s ease}.switch.on{background:var(--chili)}.switch.on::after{left:19px}
+.ai-state{display:flex;align-items:center;gap:9px;padding:10px 11px;background:rgba(122,138,106,.12);border-radius:11px;margin:8px 0 1px;font-size:10px;color:#536347}.ai-state i{width:7px;height:7px;border-radius:50%;background:#6f8b55;box-shadow:0 0 0 3px rgba(111,139,85,.15);flex:0 0 auto}
+.cloud-note{margin:4px 0 14px;padding:11px 12px;border:1px dashed rgba(30,43,36,.18);border-radius:12px;font-size:9px;line-height:1.7;color:var(--ink-soft)}
+.tabbar{position:absolute;z-index:20;left:0;right:0;bottom:0;height:78px;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 10px 12px;background:rgba(244,235,221,.92);border-top:1px solid var(--line);backdrop-filter:blur(14px)}.tab{border:0;background:none;color:var(--ink-soft);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;border-radius:12px;position:relative}.tab svg{width:21px;height:21px}.tab.active{color:var(--chili)}.tab.active::before{content:"";position:absolute;top:-8px;width:18px;height:2px;border-radius:999px;background:var(--chili)}
+.sheet-backdrop{position:absolute;z-index:30;inset:0;background:rgba(13,19,16,.46);opacity:0;pointer-events:none;transition:opacity .25s ease}.sheet-backdrop.open{opacity:1;pointer-events:auto}
+.sheet{position:absolute;z-index:31;left:0;right:0;bottom:0;max-height:80%;overflow-y:auto;background:var(--paper);border-radius:26px 26px 0 0;padding:10px 20px 28px;transform:translateY(103%);transition:transform .36s cubic-bezier(.22,.9,.24,1);box-shadow:0 -18px 50px rgba(0,0,0,.18);scrollbar-width:none}.sheet::-webkit-scrollbar{display:none}.sheet.open{transform:translateY(0)}
+.sheet-handle{width:42px;height:4px;border-radius:999px;background:rgba(30,43,36,.18);margin:0 auto 16px}.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.sheet-head h2{font-family:var(--display);font-size:25px;line-height:1.2;margin:5px 0 0;font-weight:900;letter-spacing:-.02em}.sheet-close{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:rgba(255,251,243,.5);font-size:18px;line-height:1;color:var(--ink-soft);flex:0 0 auto}
+.history-days{display:flex;gap:7px;overflow-x:auto;padding:18px 0 14px;scrollbar-width:none}.history-days::-webkit-scrollbar{display:none}.history-day{flex:0 0 56px;border-top:2px solid var(--line);padding-top:7px}.history-day b{display:block;font-family:var(--display);font-size:14px;font-weight:500}.history-day span{display:block;margin-top:3px;font-size:8px;line-height:1.45;color:var(--ink-soft)}.history-day.hot{border-top-color:var(--chili)}.history-day.fish{border-top-color:var(--sage)}
+.stat-bars{display:grid;gap:9px;padding:14px 0 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.stat-bar-head{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px}.stat-bar-head b{font-weight:700;color:var(--chili)}.bar{height:4px;border-radius:999px;background:rgba(30,43,36,.1);overflow:hidden}.bar i{display:block;height:100%;border-radius:inherit;background:var(--chili)}.bar.sage i{background:var(--sage)}.bar.mustard i{background:var(--mustard)}
+.reason-list{display:grid;gap:11px;padding:16px 0}.reason{display:grid;grid-template-columns:18px 1fr;gap:8px;font-size:11px;line-height:1.65;color:var(--ink-soft)}.reason b{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:rgba(200,74,46,.1);color:var(--chili);font-size:9px;font-weight:700}.reason strong{color:var(--ink);font-weight:700}
+.boundary-note{padding:12px 13px;background:rgba(30,43,36,.05);border-radius:12px;font-size:9px;line-height:1.7;color:var(--ink-soft);margin-bottom:12px}.sheet .btn{width:100%}
+.toast{position:absolute;z-index:50;left:50%;bottom:102px;transform:translate(-50%,14px);background:var(--ink);color:var(--paper);border-radius:999px;padding:9px 15px;font-size:10px;white-space:nowrap;opacity:0;pointer-events:none;transition:.24s ease;box-shadow:0 8px 20px rgba(0,0,0,.22)}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:980px){.stage{padding:24px;gap:30px}.brief{width:340px}.brief h1{font-size:56px}}
+@media(max-width:760px){body{background:var(--paper)}.stage{display:block;padding:0;min-height:100dvh}.brief{display:none}.device-wrap{width:100%}.phone{width:100%;height:100dvh;border-radius:0;padding:0;box-shadow:none}.phone::before{display:none}.phone-inner{border-radius:0}.statusbar{padding-top:8px;height:48px}.app{padding-bottom:92px}.tabbar{height:72px;padding-bottom:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+.dish-actions{display:flex;flex-direction:column;align-items:stretch;gap:3px}
+.dish-remove{border:0;background:transparent;color:var(--ink-soft);font-size:14px;line-height:1;padding:3px 5px;opacity:.62}
+.dish-remove:active{color:var(--chili);opacity:1}
+.add-dish{width:100%;min-height:44px;border:1px dashed rgba(30,43,36,.24);border-radius:15px;background:rgba(255,251,243,.34);color:var(--ink-soft);font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:9px}
+.add-dish span{font-size:16px;color:var(--chili);line-height:1}
+.add-dish:active{background:rgba(200,74,46,.06);border-color:rgba(200,74,46,.35)}
+.empty-slot{min-height:78px;border:1px dashed rgba(30,43,36,.3);border-radius:17px;background:rgba(255,251,243,.28);display:grid;place-items:center}
+.empty-slot button{border:0;background:none;color:var(--ink-soft);font-size:10px;display:flex;align-items:center;gap:6px;padding:18px}
+.empty-slot button span{font-size:18px;color:var(--chili);line-height:1}
+.menu-warning{margin:9px 0 0;font-size:9px;line-height:1.6;color:var(--chili);background:rgba(200,74,46,.07);border-radius:10px;padding:8px 10px}
+.role-tabs{display:flex;gap:6px;padding:14px 0 10px;border-bottom:1px solid var(--line)}
+.role-tab{flex:1;border:1px solid var(--line);background:transparent;color:var(--ink-soft);border-radius:999px;padding:8px;font-size:10px}
+.role-tab.active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.picker-list{display:grid;gap:0;padding:4px 0 10px;max-height:46vh;overflow-y:auto;scrollbar-width:none}
+.picker-list::-webkit-scrollbar{display:none}
+.picker-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid rgba(30,43,36,.08)}
+.picker-row:last-child{border-bottom:0}
+.picker-row strong{display:block;font-family:var(--display);font-size:14px}
+.picker-row small{display:block;margin-top:3px;color:var(--ink-soft);font-size:9px}
+.picker-row button{flex:0 0 auto;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:7px 10px;font-size:10px}
+.picker-row button:active{background:rgba(200,74,46,.08);border-color:var(--chili);color:var(--chili)}
+</style>
+</head>
+<body>
+<div class="stage">
+<aside class="brief">
+<span class="eyebrow">Product prototype · 2026.10.28</span>
+<h1>明日菜单</h1>
+<p class="lede">一个由 AI 判断全家晚餐的线上 Web 应用。每天打开，先看“为什么这样吃”，再决定明天买什么。</p>
+<div class="flow">
+<div class="flow-step"><b>01</b><div><strong>打开，默认明天</strong><span>读取最近 7 天已确认晚餐，以及未来已排的菜单。</span></div></div>
+<div class="flow-step"><b>02</b><div><strong>AI 从全量菜库组合</strong><span>两荤加一道素/汤，汤也占一个菜位；兼顾清淡、辣度和孩子口味。</span></div></div>
+<div class="flow-step"><b>03</b><div><strong>看得懂地确认</strong><span>每道菜有理由，可以只换一道，也可以让 AI 再想一桌。</span></div></div>
+<div class="flow-step"><b>04</b><div><strong>清单自动生成</strong><span>按食材合并、排除常备项，复制到微信就能去买菜。</span></div></div>
+</div>
+<div class="change-note"><span>这次的产品转向</span><strong>从本地工具，变成家庭餐桌</strong><ul><li>AI 是默认决策引擎，不再是可选增强</li><li>菜谱、菜单、历史保存在云端，家里人共用</li><li>AI Key 放在服务端，浏览器不再保存密钥</li><li>食材表预先生成并确认，采购清单不临时生成</li></ul></div>
+<div class="hint">点击手机里的底部导航、菜卡“换”按钮和“看判断依据”可以切换视图。</div>
+</aside>
+<main class="device-wrap">
+<div class="phone">
+<div class="phone-inner">
+<div class="statusbar"><span>20:18</span><div class="signal"><i></i><i></i><i></i><i></i><span style="margin-left:4px">5G</span><div class="battery"><i></i></div></div></div>
+<div class="app" id="app">
+<section class="screen active" data-screen="plan">
+<header class="topbar"><div class="brand"><div class="brand-mark">明</div><div><strong>明日菜单</strong><small>陈家 · 3 大 1 小</small></div></div><button class="icon-btn" aria-label="家庭设置" data-go="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c.7-3.2 3.2-5 7-5s6.3 1.8 7 5"/></svg></button></header>
+<div class="date-row"><div><span class="eyebrow">明天 · 周四</span><h2>10月29日</h2></div><button class="date-pill" data-toast="日期切换在正式版中支持今天和未来日期">今天</button></div>
+<section class="ai-card">
+<div class="ai-card-head"><span class="ai-label"><i></i> AI 已读取最近 7 天</span><span class="stamp">AI<br>掌勺</span></div>
+<p class="ai-lead">猪肉连着吃了 4 天，鱼还没上桌；昨天两道菜偏重口，今天给你配一桌有鱼、有牛、也有绿叶菜的。</p>
+<div class="stat-row"><div><b>4</b><span>猪肉</span></div><div><b>0</b><span>鱼</span></div><div><b>3</b><span>重口</span></div><div><b>2</b><span>绿叶菜</span></div></div>
+<button class="text-link" data-open-sheet>看 AI 的判断依据 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+</section>
+<div class="section-head"><h3>今晚的菜单</h3><span id="compositionLabel">2 荤 1 素 · 共 3 道</span></div>
+<div class="dish-list" id="dishList">
+<article class="dish" data-tone="fish" data-role="meat" data-slot="fish"><div class="dish-art">鱼</div><div class="dish-info"><div class="dish-top"><span class="dish-no">01</span><span class="dish-name">红烧小黄鱼</span></div><div class="dish-note">换掉连续 4 天的猪肉</div><div class="tags"><span class="tag">荤</span><span class="tag">鱼</span><span class="tag">不辣</span><span class="tag good">清淡</span></div></div><div class="dish-actions"><button class="swap" data-replace>换</button><button class="dish-remove" data-remove aria-label="移除红烧小黄鱼">删</button></div></article>
+<article class="dish" data-tone="beef" data-role="meat" data-slot="beef"><div class="dish-art">牛</div><div class="dish-info"><div class="dish-top"><span class="dish-no">02</span><span class="dish-name">仔姜牛肉</span></div><div class="dish-note">和鱼错开蛋白质</div><div class="tags"><span class="tag">荤</span><span class="tag">牛</span><span class="tag hot">微辣</span><span class="tag">下饭</span></div></div><div class="dish-actions"><button class="swap" data-replace>换</button><button class="dish-remove" data-remove aria-label="移除仔姜牛肉">删</button></div></article>
+<article class="dish" data-tone="veg" data-role="veg" data-slot="veg"><div class="dish-art">青</div><div class="dish-info"><div class="dish-top"><span class="dish-no">03</span><span class="dish-name">蒜蓉生菜</span></div><div class="dish-note">补一份绿叶菜</div><div class="tags"><span class="tag">素</span><span class="tag">不辣</span><span class="tag good">清淡</span></div></div><div class="dish-actions"><button class="swap" data-replace>换</button><button class="dish-remove" data-remove aria-label="移除蒜蓉生菜">删</button></div></article>
+</div>
+<button class="add-dish" id="addDishBtn"><span>+</span> 加一道菜</button>
+<p class="menu-warning" id="menuWarning" hidden></p>
+<div class="actions"><button class="btn btn-primary" id="confirmBtn">就吃这些</button><button class="btn btn-ghost" id="rerollBtn">让 AI 再想一桌</button></div>
+<p class="tiny-note">整桌固定 3 道，汤也占一个菜位。可以换、删、加菜；第三道可以是素菜或汤。</p>
+</section>
+<section class="screen" data-screen="library">
+<header class="topbar"><div class="brand"><div class="brand-mark">菜</div><div><strong>菜库</strong><small>全家共用 · 云端同步</small></div></div><button class="icon-btn" aria-label="新增菜" data-toast="新增菜：菜名、角色、辣度、口味、食材"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5v14M5 12h14"/></svg></button></header>
+<div class="lib-stats"><div class="lib-stat"><b>180</b><span>全部菜品</span></div><div class="lib-stat"><b>38</b><span>可推荐</span></div><div class="lib-stat"><b>130</b><span>待完善</span></div></div>
+<div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><input id="searchInput" placeholder="搜菜名、食材，例如：鱼、牛肉" aria-label="搜索菜品"></div>
+<div class="chips"><button class="chip active">全部</button><button class="chip">可推荐</button><button class="chip">待完善</button><button class="chip">荤菜</button><button class="chip">素菜</button><button class="chip">汤</button></div>
+<div class="ai-callout"><div><strong>还有 130 道菜待补全</strong><span>AI 生成草稿，你确认后才会进入推荐。</span></div><button id="batchBtn">批量补全</button></div>
+<div class="dish-rows" id="libraryRows">
+<div class="dish-row"><div><strong>回锅肉</strong><small>猪肉 · 微辣 · 重口 · 8 样食材</small></div><span class="status">可推荐</span></div>
+<div class="dish-row"><div><strong>红烧小黄鱼</strong><small>鱼 · 不辣 · 清淡 · 6 样食材</small></div><span class="status">可推荐</span></div>
+<div class="dish-row"><div><strong>蒜蓉生菜</strong><small>素 · 不辣 · 清淡 · 4 样食材</small></div><span class="status">可推荐</span></div>
+<div class="dish-row"><div><strong>香酥藕盒</strong><small>待确认 · 缺食材表</small></div><span class="status draft">待完善</span></div>
+<div class="dish-row"><div><strong>扇子骨</strong><small>猪肉 · 做法待确认 · 缺食材表</small></div><span class="status draft">待完善</span></div>
+<div class="dish-row"><div><strong>凉糕</strong><small>甜品 · 不参与两荤一素</small></div><span class="status off">非推荐</span></div>
+</div>
+</section>
+<section class="screen" data-screen="shopping">
+<header class="topbar"><div class="brand"><div class="brand-mark">买</div><div><strong>采购清单</strong><small>由已确认菜单自动生成</small></div></div><button class="icon-btn" aria-label="刷新清单" data-toast="清单已按最新菜单和常备设置重新计算"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg></button></header>
+<div class="menu-summary"><span class="eyebrow" style="color:var(--mustard)">10月29日 · 晚餐</span><h2>鱼、牛、青菜，三道刚好</h2><div class="summary-tags"><span>红烧小黄鱼</span><span>仔姜牛肉</span><span>蒜蓉生菜</span></div></div>
+<div class="buy-group"><h3>肉禽蛋</h3><label class="check-row"><input type="checkbox"><span class="check-box"></span><span>小黄鱼</span><span class="qty">1 份</span></label><label class="check-row"><input type="checkbox"><span class="check-box"></span><span>牛里脊</span><span class="qty">1 份</span></label></div>
+<div class="buy-group"><h3>蔬菜</h3><label class="check-row"><input type="checkbox"><span class="check-box"></span><span>生菜</span><span class="qty">1 把</span></label><label class="check-row"><input type="checkbox"><span class="check-box"></span><span>仔姜</span><span class="qty">1 块</span></label><label class="check-row"><input type="checkbox"><span class="check-box"></span><span>蒜</span><span class="qty">1 头</span></label></div>
+<details class="pantry"><summary>已排除 8 项家里常备食材</summary><div class="pantry-tags"><span>盐</span><span>食用油</span><span>生抽</span><span>老抽</span><span>醋</span><span>料酒</span><span>豆瓣酱</span><span>淀粉</span></div></details>
+<div class="sticky-action"><button class="btn btn-primary" id="copyBtn">复制清单，发给家人</button></div>
+<p class="tiny-note">清单只读取已确认菜单；第三道换成汤时，食材会一起替换。</p>
+</section>
+<section class="screen" data-screen="settings">
+<header class="topbar"><div class="brand"><div class="brand-mark">陈</div><div><strong>陈家餐桌</strong><small>家庭空间 · 3 台设备</small></div></div><button class="icon-btn" aria-label="编辑家庭资料" data-toast="家庭资料：人数、孩子年龄、辣度接受度"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m4 17 10.5-10.5 3 3L7 20H4v-3Z"/><path d="m13 7.5 3 3"/></svg></button></header>
+<div class="profile-card"><span class="eyebrow" style="color:var(--mustard)">Family table</span><h2>陈家 · 3 大 1 小</h2><p>晚餐默认两荤一素，孩子也能吃。</p><div class="profile-meta"><span>微辣上限 1 道</span><span>7 天不重复</span><span>第三道默认素菜</span></div></div>
+<div class="setting-group"><h3>AI 安排</h3><div class="ai-state"><i></i> 已连接 · 每次读取最近 7 天晚餐</div><div class="setting-row"><span>由 AI 决定菜单<small>始终启用，从全量可推荐菜库中组合</small></span><span style="font-size:9px;color:#536347">已启用</span></div><div class="setting-row"><span>AI 失败时本地兜底<small>仍能生成一桌合法菜单</small></span><span style="font-size:9px;color:#536347">已启用</span></div><div class="setting-row"><span>AI 参数<small>地址、模型和密钥由部署环境配置</small></span><span style="font-size:9px;color:var(--ink-soft)">服务端</span></div></div>
+<div class="setting-group"><h3>家庭规则</h3><div class="setting-row"><span>重复天数</span><span style="font-size:10px;color:var(--ink-soft)">7 天</span></div><div class="setting-row"><span>每餐最多辣菜</span><span style="font-size:10px;color:var(--ink-soft)">1 道</span></div><div class="setting-row"><span>第三道默认选汤<small>汤占一个菜位</small></span><span class="switch" role="switch" aria-checked="false" tabindex="0"></span></div><div class="setting-row"><span>忌口与过敏</span><span style="font-size:10px;color:var(--ink-soft)">未设置</span></div></div>
+<div class="setting-group"><h3>数据</h3><div class="setting-row"><span>云端同步<small>菜单、菜库和设置自动保存</small></span><span style="font-size:9px;color:#536347">正常</span></div><div class="setting-row"><span>导出家庭数据</span><span style="font-size:9px;color:var(--ink-soft)">JSON</span></div></div>
+<div class="cloud-note">数据保存在云端，家人打开同一个链接就能查看和修改，不需要登录。AI 参数只放在服务端，浏览器不接触密钥；请勿把入口链接公开传播。</div>
+</section>
+</div>
+<nav class="tabbar" aria-label="主导航">
+<button class="tab active" data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="2"/></svg><span>安排</span></button>
+<button class="tab" data-tab="library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4Z"/><path d="M8 20V7a3 3 0 0 1 3-3"/></svg><span>菜库</span></button>
+<button class="tab" data-tab="shopping"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg><span>清单</span></button>
+<button class="tab" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c.7-3.2 3.2-5 7-5s6.3 1.8 7 5"/></svg><span>我的</span></button>
+</nav>
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<aside class="sheet" id="aiSheet" aria-label="AI 判断依据">
+<div class="sheet-handle"></div>
+<div class="sheet-head"><div><span class="eyebrow" style="color:var(--chili)">10月29日 · 晚餐</span><h2>AI 为什么这样选</h2></div><button class="sheet-close" id="closeSheet" aria-label="关闭">×</button></div>
+<div class="history-days"><div class="history-day hot"><b>22</b><span>回锅肉<br>番茄炒蛋</span></div><div class="history-day"><b>23</b><span>宫保鸡丁<br>蒜蓉生菜</span></div><div class="history-day hot"><b>24</b><span>红烧肉<br>麻辣豆腐</span></div><div class="history-day hot"><b>25</b><span>水煮肉片<br>韭菜炒蛋</span></div><div class="history-day"><b>26</b><span>小炒黄牛肉<br>干煸四季豆</span></div><div class="history-day hot"><b>27</b><span>鱼香肉丝<br>酸辣土豆丝</span></div><div class="history-day"><b>28</b><span>辣子鸡<br>凉拌黄瓜</span></div></div>
+<div class="stat-bars"><div><div class="stat-bar-head"><span>猪肉</span><b>4 次</b></div><div class="bar"><i style="width:85%"></i></div></div><div><div class="stat-bar-head"><span>鱼</span><b>0 次</b></div><div class="bar sage"><i style="width:4%"></i></div></div><div><div class="stat-bar-head"><span>重口</span><b>3 次</b></div><div class="bar mustard"><i style="width:62%"></i></div></div><div><div class="stat-bar-head"><span>绿叶菜</span><b>2 次</b></div><div class="bar sage"><i style="width:42%"></i></div></div></div>
+<div class="reason-list"><div class="reason"><b>1</b><div><strong>换掉猪肉。</strong>最近 7 天猪肉出现 4 次，鱼一次没吃；先让鱼上桌。</div></div><div class="reason"><b>2</b><div><strong>蛋白质错开。</strong>鱼配牛肉，两道荤菜不重复，也避开了最近常吃的鸡。</div></div><div class="reason"><b>3</b><div><strong>把口味降下来。</strong>最近 3 顿偏重口，今天第三道配蒜蓉生菜；想喝汤时，汤会占这一道的位置。</div></div><div class="reason"><b>4</b><div><strong>不碰近期菜。</strong>红烧小黄鱼、仔姜牛肉、蒜蓉生菜都不在最近 7 天的菜单里。</div></div></div>
+<div class="boundary-note">AI 只负责“选哪几道”。两荤一素（素/汤占第三道）、蛋白质差异、辣度、忌口和 7 天去重会再由服务端规则校验一次；AI 失败时自动回退到本地推荐。</div>
+<button class="btn btn-ghost" id="sheetRetry">让 AI 重新判断</button>
+</aside>
+<div class="sheet-backdrop" id="dishBackdrop"></div>
+<aside class="sheet" id="dishSheet" aria-label="选择菜品">
+<div class="sheet-handle"></div>
+<div class="sheet-head"><div><span class="eyebrow" style="color:var(--chili)">整桌 3 道 · 汤占一个菜位</span><h2 id="dishSheetTitle">加一道菜</h2></div><button class="sheet-close" id="closeDishSheet" aria-label="关闭">×</button></div>
+<div class="role-tabs" id="roleTabs"><button class="role-tab active" data-role="meat">荤菜</button><button class="role-tab" data-role="veg">素菜</button><button class="role-tab" data-role="soup">汤</button></div>
+<div class="picker-list" id="pickerList"></div>
+</aside>
+<div class="toast" id="toast"></div>
+</div>
+</div>
+</main>
+</div>
+<script>
+const screens=[...document.querySelectorAll('.screen')],tabs=[...document.querySelectorAll('.tab')],app=document.getElementById('app'),toastEl=document.getElementById('toast'),sheet=document.getElementById('aiSheet'),backdrop=document.getElementById('sheetBackdrop');let toastTimer;
+function showScreen(name){screens.forEach(s=>s.classList.toggle('active',s.dataset.screen===name));tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===name));app.scrollTop=0}
+function toast(msg){toastEl.textContent=msg;toastEl.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove('show'),2200)}
+function openSheet(){sheet.classList.add('open');backdrop.classList.add('open')}
+function closeSheet(){sheet.classList.remove('open');backdrop.classList.remove('open')}
+tabs.forEach(t=>t.addEventListener('click',()=>showScreen(t.dataset.tab)));
+document.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',()=>showScreen(el.dataset.go)));
+document.querySelectorAll('[data-toast]').forEach(el=>el.addEventListener('click',()=>toast(el.dataset.toast)));
+document.querySelector('[data-open-sheet]').addEventListener('click',openSheet);
+document.getElementById('closeSheet').addEventListener('click',closeSheet);
+backdrop.addEventListener('click',closeSheet);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet();closeDishSheet();}});
+const catalog={meat:[
+{name:'红烧小黄鱼',tone:'fish',char:'鱼',note:'换掉连续 4 天的猪肉',tags:[['荤',''],['鱼',''],['不辣',''],['清淡','good']]},
+{name:'仔姜牛肉',tone:'beef',char:'牛',note:'和鱼错开蛋白质',tags:[['荤',''],['牛',''],['微辣','hot'],['下饭','']]},
+{name:'酸菜黑鱼',tone:'fish',char:'鱼',note:'换个酸香口',tags:[['荤',''],['鱼',''],['微辣','hot'],['酸香','']]},
+{name:'小炒黄牛肉',tone:'beef',char:'牛',note:'最近没吃，快手下饭',tags:[['荤',''],['牛',''],['微辣','hot'],['下饭','']]},
+{name:'宫保鸡丁',tone:'beef',char:'鸡',note:'鸡肉轮换',tags:[['荤',''],['鸡',''],['微辣','hot'],['家常','']]},
+{name:'水煮肉片',tone:'beef',char:'猪',note:'想吃辣时再选',tags:[['荤',''],['猪',''],['较辣','hot'],['重口','']]}
+],veg:[
+{name:'蒜蓉生菜',tone:'veg',char:'青',note:'补一份绿叶菜',tags:[['素',''],['不辣',''],['清淡','good']]},
+{name:'清炒茼蒿',tone:'veg',char:'青',note:'换一种绿叶菜',tags:[['素',''],['不辣',''],['清淡','good']]},
+{name:'蒜蓉油麦菜',tone:'veg',char:'青',note:'清爽、不辣',tags:[['素',''],['不辣',''],['清淡','good']]},
+{name:'干煸四季豆',tone:'veg',char:'豆',note:'干香下饭',tags:[['素',''],['微辣','hot'],['家常','']]},
+{name:'酸辣土豆丝',tone:'veg',char:'土',note:'孩子也爱吃',tags:[['素',''],['微辣','hot'],['家常','']]}
+],soup:[
+{name:'番茄蛋汤',tone:'soup',char:'汤',note:'孩子也能喝',tags:[['汤',''],['蛋',''],['清淡','good']]},
+{name:'黄瓜皮蛋汤',tone:'soup',char:'汤',note:'清口解腻',tags:[['汤',''],['蛋',''],['清淡','good']]},
+{name:'丝瓜蛋汤',tone:'soup',char:'汤',note:'轻一点，适合今天',tags:[['汤',''],['蛋',''],['清淡','good']]},
+{name:'紫菜蛋汤',tone:'soup',char:'汤',note:'简单快手',tags:[['汤',''],['蛋',''],['清淡','good']]}
+]};
+function tagsHtml(tags){return tags.map(function(t){return '<span class="tag '+(t[1]||'')+'">'+t[0]+'</span>';}).join('');}
+function createDishCard(dish,role){var article=document.createElement('article');article.className='dish';article.dataset.tone=dish.tone;article.dataset.role=role;article.innerHTML='<div class="dish-art">'+dish.char+'</div><div class="dish-info"><div class="dish-top"><span class="dish-no">01</span><span class="dish-name">'+dish.name+'</span></div><div class="dish-note">'+dish.note+'</div><div class="tags">'+tagsHtml(dish.tags)+'</div></div><div class="dish-actions"><button class="swap" data-replace>换</button><button class="dish-remove" data-remove aria-label="移除'+dish.name+'">删</button></div>';return article;}
+function updateCard(card,dish,role){card.dataset.tone=dish.tone;card.dataset.role=role;card.querySelector('.dish-art').textContent=dish.char;card.querySelector('.dish-name').textContent=dish.name;card.querySelector('.dish-note').textContent=dish.note;card.querySelector('.tags').innerHTML=tagsHtml(dish.tags);}
+function findDish(name){var groups=Object.keys(catalog);for(var i=0;i<groups.length;i++){var list=catalog[groups[i]];for(var j=0;j<list.length;j++){if(list[j].name===name)return list[j];}}return null;}
+var pickerMode='add',pickerTarget=null,pendingRole='meat',menuIndex=0;
+var dishSheet=document.getElementById('dishSheet'),dishBackdrop=document.getElementById('dishBackdrop'),pickerList=document.getElementById('pickerList'),roleTabs=document.getElementById('roleTabs');
+function updateMenuMeta(){var cards=[].slice.call(document.querySelectorAll('#dishList .dish'));var counts={meat:0,veg:0,soup:0};cards.forEach(function(card){counts[card.dataset.role]=(counts[card.dataset.role]||0)+1;});var total=cards.length,label='搭配待调整';if(total<3){label='还差 '+(3-total)+' 道';}else if(total===3&&counts.meat===2&&counts.veg===1&&counts.soup===0){label='2 荤 1 素 · 共 3 道';}else if(total===3&&counts.meat===2&&counts.veg===0&&counts.soup===1){label='2 荤 1 汤 · 共 3 道';}else if(total===4&&counts.meat===2&&counts.veg===1&&counts.soup===1){label='2 荤 1 素 + 1 汤 · 共 4 道';}document.getElementById('compositionLabel').textContent=label;var warning=document.getElementById('menuWarning');var valid=total===3&&counts.meat===2&&(counts.veg===1||counts.soup===1);if(valid){warning.hidden=true;}else{warning.hidden=false;warning.textContent='当前 '+total+' 道：'+counts.meat+' 荤、'+counts.veg+' 素、'+counts.soup+' 汤。两荤一素（素/汤占第三道）才符合规则。';}cards.forEach(function(card,index){card.querySelector('.dish-no').textContent=('0'+(index+1)).slice(-2);});}
+function closeDishSheet(){dishSheet.classList.remove('open');dishBackdrop.classList.remove('open');}
+function renderPicker(role){var rows=catalog[role].filter(function(d){return !(pickerMode==='replace'&&pickerTarget&&pickerTarget.querySelector('.dish-name').textContent===d.name);});pickerList.innerHTML=rows.map(function(d){return '<div class="picker-row"><div><strong>'+d.name+'</strong><small>'+d.tags.map(function(t){return t[0];}).join(' · ')+'</small></div><button data-pick="'+d.name+'">选它</button></div>';}).join('');pickerList.querySelectorAll('[data-pick]').forEach(function(button){button.addEventListener('click',function(){var dish=catalog[role].filter(function(d){return d.name===button.dataset.pick;})[0];if(!dish)return;if(pickerMode==='replace'&&pickerTarget){updateCard(pickerTarget,dish,role);}else{var empty=document.querySelector('.empty-slot');if(empty){empty.replaceWith(createDishCard(dish,role));}else{document.getElementById('dishList').appendChild(createDishCard(dish,role));}}closeDishSheet();updateMenuMeta();toast(pickerMode==='replace'?'已换一道，其他菜不变':'已加一道菜');});});}
+function openDishSheet(mode,card,role){closeSheet();pickerMode=mode;pickerTarget=card||null;pendingRole=role||'meat';document.getElementById('dishSheetTitle').textContent=mode==='replace'?'换一道菜':'加一道菜';roleTabs.querySelectorAll('.role-tab').forEach(function(tab){tab.classList.toggle('active',tab.dataset.role===pendingRole);});renderPicker(pendingRole);dishSheet.classList.add('open');dishBackdrop.classList.add('open');}
+function removeDish(card){var empty=document.createElement('article');empty.className='empty-slot';empty.innerHTML='<button data-add><span>+</span> 加一道菜</button>';card.replaceWith(empty);updateMenuMeta();toast('已移除，再补一道就齐了');}
+function renderMenuSet(set){var list=document.getElementById('dishList');list.innerHTML='';list.appendChild(createDishCard(set.fish,'meat'));list.appendChild(createDishCard(set.beef,'meat'));list.appendChild(createDishCard(set.third.dish,set.third.role));updateMenuMeta();}
+document.getElementById('dishList').addEventListener('click',function(event){var replace=event.target.closest('[data-replace]');if(replace){var card=replace.closest('.dish');openDishSheet('replace',card,card.dataset.role);return;}var remove=event.target.closest('[data-remove]');if(remove){removeDish(remove.closest('.dish'));return;}var add=event.target.closest('[data-add]');if(add){openDishSheet('add',null,'veg');}});
+document.getElementById('addDishBtn').addEventListener('click',function(){if(document.querySelector('.empty-slot')){openDishSheet('add',null,'veg');}else{toast('整桌 3 道，先移除一道再添加');}});
+document.getElementById('closeDishSheet').addEventListener('click',closeDishSheet);
+dishBackdrop.addEventListener('click',closeDishSheet);
+roleTabs.querySelectorAll('.role-tab').forEach(function(tab){tab.addEventListener('click',function(){pendingRole=tab.dataset.role;roleTabs.querySelectorAll('.role-tab').forEach(function(item){item.classList.toggle('active',item===tab);});renderPicker(pendingRole);});});
+const menuSets=[{fish:findDish('红烧小黄鱼'),beef:findDish('仔姜牛肉'),third:{role:'veg',dish:findDish('蒜蓉生菜')}},{fish:findDish('酸菜黑鱼'),beef:findDish('番茄牛腩'),third:{role:'soup',dish:findDish('黄瓜皮蛋汤')}},{fish:findDish('红烧小黄鱼'),beef:findDish('小炒黄牛肉'),third:{role:'veg',dish:findDish('蒜蓉油麦菜')}}];
+document.getElementById('rerollBtn').addEventListener('click',function(){menuIndex=(menuIndex+1)%menuSets.length;renderMenuSet(menuSets[menuIndex]);toast('AI 已重新组合一桌，理由同步更新');});
+updateMenuMeta();
+document.getElementById('confirmBtn').addEventListener('click',()=>{toast('已确认 10月29日 晚餐，采购清单已更新');setTimeout(()=>showScreen('shopping'),700)});
+document.getElementById('copyBtn').addEventListener('click',async()=>{const text='10月29日晚餐：红烧小黄鱼、仔姜牛肉、蒜蓉生菜\n\n需要买：\n小黄鱼、牛里脊、生菜、仔姜、蒜';try{await navigator.clipboard.writeText(text);toast('清单已复制，可以直接粘贴到微信')}catch(e){toast('已生成清单，浏览器不允许自动复制时可手动选择')}});
+document.getElementById('sheetRetry').addEventListener('click',()=>{closeSheet();toast('AI 正在重新读取最近 7 天…')});
+document.getElementById('batchBtn').addEventListener('click',()=>toast('已生成 12 道食材草稿，等待你确认'));
+document.querySelectorAll('.chip').forEach(chip=>chip.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');toast('已筛选：'+chip.textContent)}));
+document.querySelectorAll('.switch').forEach(t=>t.addEventListener('click',()=>{const on=t.classList.toggle('on');t.setAttribute('aria-checked',String(on));toast(on?'已开启':'已关闭')}));
+document.querySelectorAll('.check-row').forEach(row=>row.addEventListener('change',()=>{const checked=row.querySelector('input').checked;toast(checked?'已买：'+row.querySelector('span:nth-of-type(2)').textContent:'已取消')}));
+document.getElementById('searchInput').addEventListener('input',e=>{const q=e.target.value.trim();document.querySelectorAll('#libraryRows .dish-row').forEach(row=>{row.style.display=!q||row.textContent.includes(q)?'':'none'})});
+</script>
+</body>
+</html>
