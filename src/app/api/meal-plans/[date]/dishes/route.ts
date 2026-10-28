@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { getComposition, sortDishesByRole } from "@/domain/composition";
+import { sortDishesByRole } from "@/domain/composition";
 import { getEligibleDishes, toRecipeMap } from "@/domain/eligibility";
 import {
   getDishes,
@@ -19,7 +19,7 @@ import { ApiError } from "@/server/errors";
 const bodySchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("replace"), dishId: z.string(), replacementDishId: z.string() }),
   z.object({ action: z.literal("remove"), dishId: z.string() }),
-  z.object({ action: z.literal("add"), role: z.enum(["meat", "veg", "soup"]), dishId: z.string() })
+  z.object({ action: z.literal("add"), dishId: z.string() })
 ]);
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ date: string }> }) {
@@ -59,40 +59,28 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       if (!replacement) {
         throw new ApiError({ status: 422, code: "DISH_NOT_ELIGIBLE", message: "这道菜暂不可推荐，请先补全食材或解除忌口。" });
       }
-      const thirdRole = current.role === "veg" || current.role === "soup";
-      if (thirdRole ? replacement.role !== "veg" && replacement.role !== "soup" : replacement.role !== current.role) {
-        throw new ApiError({
-          status: 400,
-          code: "ROLE_MISMATCH",
-          message: thirdRole ? "第三道只能在素菜和汤之间替换。" : "换菜需要保持原来的菜单角色。"
-        });
-      }
       next = next.map((dish) => (dish.dishId === parsed.dishId ? { dishId: replacement.id, role: replacement.role } : dish));
     }
 
     if (parsed.action === "add") {
-      if (next.length >= 3) {
-        throw new ApiError({ status: 409, code: "PLAN_FULL", message: "整桌已有 3 道，请先移除一道再添加。" });
-      }
       if (next.some((dish) => dish.dishId === parsed.dishId)) {
         throw new ApiError({ status: 409, code: "DUPLICATE_DISH", message: "这道菜已经在菜单里了。" });
       }
       const addition = candidateMap.get(parsed.dishId);
-      if (!addition || addition.role !== parsed.role) {
-        throw new ApiError({ status: 422, code: "DISH_NOT_ELIGIBLE", message: "所选菜品与角色不匹配或暂不可推荐。" });
+      if (!addition) {
+        throw new ApiError({ status: 422, code: "DISH_NOT_ELIGIBLE", message: "这道菜暂不可推荐，请先补全食材或解除忌口。" });
       }
       next.push({ dishId: addition.id, role: addition.role });
     }
 
     next = sortDishesByRole(next);
-    const composition = getComposition(next.map((dish) => ({ role: dish.role })));
     await savePlan({
       targetDate: date,
       status: plan.status,
       source: "manual",
       dishes: next,
       historyWindowUsed: plan.historyWindowUsed,
-      manualOverride: !composition.valid
+      manualOverride: false
     });
     return jsonOk(await getPlanResponse(date));
   } catch (error) {

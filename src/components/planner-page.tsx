@@ -13,6 +13,7 @@ import {
   Plus,
   RotateCcw,
   Search,
+  Shuffle,
   SlidersHorizontal,
   Sparkles,
   UtensilsCrossed
@@ -20,6 +21,7 @@ import {
 import type { DishWithRecipe, PlanDish, PlanResponse } from "@/domain/types";
 import { addDays, formatChineseDate, formatWeekday, friendlyDateLabel } from "@/domain/date";
 import { PROTEIN_LABELS, FLAVOR_LABELS, SPICE_LABELS } from "@/domain/labels";
+import { pickRandomReplacement } from "@/domain/editing";
 import { useApp } from "./app-provider";
 import { ClientApiError } from "@/lib/client-types";
 import { DishSeal, DishTags, EmptyState, LoadingBlock, Modal, PageHeader, Segmented, Sheet, Spinner, StatusPill } from "./ui";
@@ -86,8 +88,8 @@ export function PlannerPage() {
   const summary = useMemo(() => {
     if (plan?.source === "manual") {
       return plan.status === "confirmed"
-        ? "这桌做过手动调整，采购清单已按当前三道菜更新。"
-        : "这桌在建议基础上做过手动调整，确认后会按当前三道菜生成采购清单。";
+        ? `这桌做过手动调整，采购清单已按当前 ${plan.dishes.length} 道菜更新。`
+        : `这桌在建议基础上做过手动调整，确认后会按当前 ${plan.dishes.length} 道菜生成采购清单。`;
     }
     if (plan?.ai?.summary) return plan.ai.summary;
     if (plan) return "这桌从可推荐菜库中组合，让两位荤菜的主蛋白质错开，并尽量避开最近一周的口味。";
@@ -170,8 +172,25 @@ export function PlannerPage() {
         `已换成「${dish.name}」，另外两道不变`
       );
     } else {
-      await patchDish({ action: "add", role: picker.role, dishId: dish.id }, `已加入「${dish.name}」`);
+      await patchDish({ action: "add", dishId: dish.id }, `已加入「${dish.name}」`);
     }
+  }
+
+  async function randomReplace() {
+    if (!picker.open || picker.mode !== "replace" || !picker.dish || !plan) return;
+    const replacement = pickRandomReplacement(
+      autoDishes,
+      plan.dishes.map((dish) => dish.id),
+      picker.dish.id
+    );
+    if (!replacement) {
+      toast("暂时没有可替换的其他菜", "default");
+      return;
+    }
+    await patchDish(
+      { action: "replace", dishId: picker.dish.id, replacementDishId: replacement.id },
+      `随机换成「${replacement.name}」`
+    );
   }
 
   async function confirmPlan(manualOverride = false) {
@@ -203,14 +222,11 @@ export function PlannerPage() {
   if (!info || !selectedDate) return null;
 
   const familySummary = `${info.family.profile.adults} 大 ${info.family.profile.children} 小 · ${info.family.profile.spiceTolerance}`;
-  const pickerRoles: Array<{ value: "meat" | "veg" | "soup"; label: string }> =
-    picker.mode === "replace" && picker.dish?.role === "meat"
-      ? [{ value: "meat", label: "荤菜" }]
-      : [
-          { value: "meat", label: "荤菜" },
-          { value: "veg", label: "素菜" },
-          { value: "soup", label: "汤" }
-        ];
+  const pickerRoles: Array<{ value: "meat" | "veg" | "soup"; label: string }> = [
+    { value: "meat", label: "荤菜" },
+    { value: "veg", label: "素菜" },
+    { value: "soup", label: "汤" }
+  ];
 
   const filteredPickerDishes = autoDishes.filter(
     (dish) =>
@@ -321,8 +337,8 @@ export function PlannerPage() {
 
           <div className="section-head">
             <div>
-              <span className="eyebrow">晚餐 · 三道刚好</span>
-              <h2>{plan ? "这桌的菜单" : "还空着三副碗筷"}</h2>
+              <span className="eyebrow">晚餐 · 按需增减</span>
+              <h2>{plan ? "这桌的菜单" : "还空着碗筷"}</h2>
             </div>
             <button className="text-link quiet" onClick={() => setEvidenceOpen(true)} disabled={!plan}>
               <span id="compositionLabel">{composition?.label ?? "还没有选菜"}</span>
@@ -352,12 +368,6 @@ export function PlannerPage() {
                   </div>
                 </article>
               ))}
-              {plan.dishes.length < 3 ? (
-                <button className="empty-slot" onClick={() => void openPicker("add", null)} disabled={isBusy}>
-                  <span><Plus size={18} /></span>
-                  还差 {3 - plan.dishes.length} 道，加一道菜
-                </button>
-              ) : null}
             </div>
           ) : (
             <div className="dish-list placeholder-list">
@@ -365,16 +375,16 @@ export function PlannerPage() {
                 <div className="dish-placeholder" key={item}>
                   <DishSeal dish={{ role: item === 2 ? "veg" : "meat", protein: item === 0 ? "fish" : "beef", name: "" }} />
                   <div>
-                    <span>{item === 2 ? "第三道 · 素菜或汤" : `荤菜 ${item + 1}`}</span>
-                    <small>{item === 2 ? "汤也占这一道的位置" : "等待 AI 配菜"}</small>
+                    <span>{item === 2 ? "素菜 · 必须保留" : `荤菜 ${item + 1}`}</span>
+                    <small>{item === 2 ? "汤菜会作为额外一道" : "等待 AI 配菜"}</small>
                   </div>
                 </div>
               ))}
             </div>
           )}
 
-          {plan && plan.dishes.length === 3 ? (
-            <button className="add-dish-bar" onClick={() => toast("整桌 3 道，先移除一道再添加")}>
+          {plan ? (
+            <button className="add-dish-bar" onClick={() => void openPicker("add", null)} disabled={isBusy}>
               <Plus size={16} /> 加一道菜
             </button>
           ) : null}
@@ -428,9 +438,14 @@ export function PlannerPage() {
       <Sheet
         open={picker.open}
         onClose={() => setPicker((current) => ({ ...current, open: false }))}
-        eyebrow={picker.mode === "replace" ? "保持另外两道不变" : "先选角色，再选菜"}
+        eyebrow={picker.mode === "replace" ? "可以换成任意角色，也可以交给随机" : "先选角色，再选菜"}
         title={picker.mode === "replace" ? "换一道菜" : "加一道菜"}
       >
+        {picker.mode === "replace" ? (
+          <button className="btn btn-ghost compact random-replace" onClick={() => void randomReplace()} disabled={actionBusy || pickerLoading}>
+            <Shuffle size={16} /> 随机换一道
+          </button>
+        ) : null}
         <Segmented
           value={picker.role}
           options={pickerRoles}
@@ -479,7 +494,7 @@ export function PlannerPage() {
           </>
         }
       >
-        <p className="modal-lead">这桌不符合两荤一素/汤的服务端硬规则。你仍然可以确认，历史会标记为“手动调整”。</p>
+        <p className="modal-lead">下面这些问题需要你确认。手动调整的菜品数量和荤素结构不会被限制，确认后会按当前菜单生成采购清单。</p>
         <ul className="issue-list">
           {confirmIssues.map((issue) => <li key={issue}>{issue}</li>)}
         </ul>
@@ -548,7 +563,7 @@ function EvidenceContent({ data }: { data: PlanResponse }) {
       </div>
 
       <div className="boundary-note">
-        AI 只负责“选哪几道”。两荤一素/汤、蛋白质差异、辣度、忌口、食材完整度和重复天数会再由服务端校验一次；AI 不可用时自动回退到本地规则。
+        自动推荐会保证 2 道荤菜、1 道真正的素菜，并按设置额外配 1 道汤；汤不替代素菜。手工换菜、加菜和减菜不受菜品数量或荤素结构限制，但仍会检查忌口、食材完整度和重复菜品。AI 不可用时自动回退到本地规则。
       </div>
       {plan?.ai ? (
         <div className="model-note">

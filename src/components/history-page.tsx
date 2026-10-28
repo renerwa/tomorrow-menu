@@ -63,7 +63,7 @@ export function HistoryPage() {
         <EmptyState
           eyebrow="还没有历史"
           title="第一顿，从明天开始"
-          body="确认菜单后，这里会留下日期、三道菜和采购清单入口。草稿不会进入历史。"
+          body="确认菜单后，这里会留下日期、菜品和采购清单入口。草稿不会进入历史。"
           action={<Link href="/planner" className="btn btn-primary compact"><UtensilsCrossed size={16} /> 去安排晚餐</Link>}
         />
       ) : (

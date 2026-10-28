@@ -155,7 +155,7 @@ export function ShoppingPage() {
           ) : null}
 
           <div className="shopping-note">
-            <p>只写食材名称，不记录克数。清单按食材 ID 去重，第三道从素菜换成汤时会整项替换。</p>
+            <p>只写食材名称，不记录克数。清单按食材 ID 去重，调整菜单后会按当前所有菜品重新合并。</p>
             <Link href="/planner" className="text-link">回到安排页</Link>
           </div>
 

@@ -4,7 +4,7 @@ import { getEligibleDishes, toRecipeMap } from "@/domain/eligibility";
 import { MenuUnavailableError, buildLocalRecommendation } from "@/domain/recommendation";
 import { buildMealStats, toAiCandidates, toRecentMeals } from "@/domain/stats";
 import { getComposition, compositionWarnings } from "@/domain/composition";
-import { validateSelection } from "@/domain/validation";
+import { selectionWarnings, validateSelection } from "@/domain/validation";
 import type {
   Dish,
   Ingredient,
@@ -118,15 +118,23 @@ async function buildResponse(targetDate: string, context?: PlanningContext): Pro
   const ctx = context ?? await loadPlanningContext(targetDate);
   const plan = await getPlanView(targetDate);
   const composition = getComposition(plan?.dishes ?? []);
-  const warnings = plan ? compositionWarnings(plan.dishes) : [];
-  if (plan && composition.valid) {
+  const mode = plan?.source === "manual" ? "manual" : "generated";
+  const warnings = plan ? compositionWarnings(plan.dishes, mode) : [];
+  if (plan) {
     warnings.push(
       ...validateSelection(plan.dishes, {
         candidates: ctx.candidates,
         repeatDishIds: repeatDishIds(ctx.repeatPlans, targetDate),
         settings: ctx.settings
-      })
+      }, { mode })
     );
+    if (mode === "manual") {
+      warnings.push(...selectionWarnings(plan.dishes, {
+        candidates: ctx.candidates,
+        repeatDishIds: repeatDishIds(ctx.repeatPlans, targetDate),
+        settings: ctx.settings
+      }));
+    }
   }
   if (plan && plan.historyWindowUsed < ctx.settings.repeatDays) {
     warnings.push(`近期可选菜不足，本次重复窗口放宽为 ${plan.historyWindowUsed === 0 ? "不限制" : `${plan.historyWindowUsed} 天`}。`);
@@ -148,11 +156,12 @@ export async function getConfirmationIssues(date: string): Promise<{ issues: str
   const context = await loadPlanningContext(date);
   const plan = await getPlanView(date);
   if (!plan) return { issues: ["还没有菜单，先让 AI 安排一桌。"], planExists: false };
+  const mode = plan.source === "manual" ? "manual" : "generated";
   const issues = validateSelection(plan.dishes, {
     candidates: context.candidates,
     repeatDishIds: repeatDishIds(context.repeatPlans, date),
     settings: context.settings
-  });
+  }, { mode });
   const recipeMap = toRecipeMap(context.recipes);
   for (const dish of plan.dishes) {
     const recipe = recipeMap[dish.id];

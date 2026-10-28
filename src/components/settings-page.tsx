@@ -170,11 +170,11 @@ export function SettingsPage() {
       <section className="profile-card">
         <span className="eyebrow">Family table</span>
         <h2>{info.family.name}</h2>
-        <p>{info.family.profile.adults} 位大人 · {info.family.profile.children} 位孩子 · 晚餐默认两道荤菜加一道素/汤</p>
+        <p>{info.family.profile.adults} 位大人 · {info.family.profile.children} 位孩子 · 晚餐自动推荐 2 荤 1 素，可按设置加 1 道汤</p>
         <div className="profile-meta">
           <span>{info.family.profile.spiceTolerance}上限 {info.settings.maxSpicyDishes} 道</span>
           <span>{info.settings.repeatDays} 天不重复</span>
-          <span>第三道默认{info.settings.thirdDishDefault === "veg" ? "素菜" : "汤"}</span>
+          <span>汤菜{info.settings.thirdDishDefault === "veg" ? "不额外配" : "额外配一道"}</span>
         </div>
       </section>
 
@@ -198,7 +198,7 @@ export function SettingsPage() {
           <i /> {info.ai.configured ? `已连接 · ${info.ai.model}` : "未配置 · 当前使用本地规则"}
         </div>
         <div className="setting-row"><span>每次读取最近 7 天晚餐<small>还需结合未来已安排菜单去重</small></span><StatusPill tone="sage">已启用</StatusPill></div>
-        <div className="setting-row"><span>AI 失败时本地兜底<small>仍能生成合法的两荤一素/汤</small></span><StatusPill tone="sage">已启用</StatusPill></div>
+        <div className="setting-row"><span>AI 失败时本地兜底<small>仍能生成 2 荤 1 素，并可选 1 道汤</small></span><StatusPill tone="sage">已启用</StatusPill></div>
         <div className="setting-row"><span>今日 AI 生成次数<small>全局上限 {info.ai.maxDailyCalls} 次 · 单设备 {info.ai.maxCallsPerIpPerDay} 次</small></span><b>{info.ai.callsToday} / {info.ai.maxDailyCalls}</b></div>
         <div className="setting-row"><span><KeyRound size={14} /> API Key 与模型<small>只由部署环境变量提供，浏览器永远不接触</small></span><StatusPill tone="muted">服务端</StatusPill></div>
       </section>
@@ -211,8 +211,8 @@ export function SettingsPage() {
         <Field label="每餐最多辣菜" hint="汤也计入辣菜数量">
           <Segmented value={maxSpicy} options={[{ value: 0, label: "不吃辣" }, { value: 1, label: "1 道" }, { value: 2, label: "2 道" }]} onChange={(value) => setMaxSpicy(value as 0 | 1 | 2)} ariaLabel="每餐最多辣菜" />
         </Field>
-        <Field label="第三道默认" hint="汤算一个菜位，不再额外加第 4 道">
-          <Segmented value={thirdDefault} options={[{ value: "veg", label: "素菜" }, { value: "soup", label: "汤" }]} onChange={(value) => setThirdDefault(value as "veg" | "soup")} ariaLabel="第三道默认" />
+        <Field label="默认配汤" hint="素菜始终保留；开启后在 2 荤 1 素之外再加 1 道汤">
+          <Segmented value={thirdDefault} options={[{ value: "veg", label: "不额外配汤" }, { value: "soup", label: "加一道汤" }]} onChange={(value) => setThirdDefault(value as "veg" | "soup")} ariaLabel="默认配汤" />
         </Field>
         <button className="btn btn-ghost compact group-save" onClick={saveRules} disabled={saving === "rules"}>
           {saving === "rules" ? <Spinner /> : <Check size={15} />} 保存家庭规则

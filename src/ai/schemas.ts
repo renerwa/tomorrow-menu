@@ -8,7 +8,8 @@ export const aiMenuSchema = z.object({
         reason: z.string().min(1).max(240)
       })
     )
-    .length(3),
+    .min(3)
+    .max(4),
   summary: z.string().min(1).max(500),
   diversity: z
     .object({

@@ -145,7 +145,6 @@ export async function importBackup(backup: BackupData): Promise<void> {
   for (const plan of backup.plans) {
     if (planDates.has(plan.targetDate)) throw new Error(`备份菜单日期 ${plan.targetDate} 重复`);
     planDates.add(plan.targetDate);
-    if (plan.dishes.length > 3) throw new Error(`备份菜单 ${plan.targetDate} 超过 3 道菜`);
     const dishIdsInPlan = new Set<string>();
     for (const dish of plan.dishes) {
       if (!allDishIds.has(dish.id)) throw new Error(`备份菜单引用了不存在的菜品 ${dish.id}`);

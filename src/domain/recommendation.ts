@@ -13,7 +13,7 @@ export class MenuUnavailableError extends Error {
     };
     const missing = [
       details.meat < 2 ? "至少 2 道荤菜" : null,
-      details.veg + details.soup < 1 ? "1 道素菜或汤" : null
+      details.veg < 1 ? "至少 1 道素菜（汤不替代素菜）" : null
     ].filter(Boolean);
     super(`可用菜品不足，还缺 ${missing.join("、") || "符合规则的组合"}。请检查菜库、忌口或辣度设置。`);
     this.details = details;
@@ -22,7 +22,8 @@ export class MenuUnavailableError extends Error {
 
 interface Combination {
   meat: [Dish, Dish];
-  third: Dish;
+  veg: Dish;
+  soup: Dish | null;
   score: number;
 }
 
@@ -48,16 +49,20 @@ function weightedPick(combinations: Combination[], random: () => number): Combin
 function compositionScore(dishes: Dish[], stats: MealStats): number {
   let score = 10;
   for (const dish of dishes) {
-    if (dish.role === "meat") {
+    if (dish.protein !== "none" && dish.protein !== "other") {
       const count = stats.proteinCounts[dish.protein] ?? 0;
-      score += Math.max(0, 5 - count) * 2;
+      score += Math.max(0, 5 - count) * 1.5;
     }
     if (dish.flavor === "light") score += 3;
     if (dish.flavor === "rich") score -= 0.8;
     if (dish.spiceLevel > 0) score -= 0.8;
-    for (const ingredient of stats.ingredientCounts ? [] : []) void ingredient;
   }
   return Math.max(0.2, score);
+}
+
+function isValidCombination(dishes: Dish[], settings: Settings): boolean {
+  if (dishes.filter((dish) => dish.spiceLevel > 0).length > settings.maxSpicyDishes) return false;
+  return dishes.some((dish) => dish.flavor === "light");
 }
 
 function buildCombinations(
@@ -65,41 +70,49 @@ function buildCombinations(
   repeatIds: Set<string>,
   settings: Settings,
   stats: MealStats,
-  thirdPreference: ThirdDishDefault
+  addSoup: boolean
 ): Combination[] {
   const available = candidates.filter((dish) => !repeatIds.has(dish.id));
   const meat = available.filter((dish) => dish.role === "meat");
-  const preferredThird = available.filter((dish) => dish.role === thirdPreference);
-  const alternateThird = available.filter(
-    (dish) => dish.role === (thirdPreference === "veg" ? "soup" : "veg")
-  );
-  const allThird = [...preferredThird, ...alternateThird];
-  const combos: Combination[] = [];
+  const vegetables = available.filter((dish) => dish.role === "veg");
+  const soups = available.filter((dish) => dish.role === "soup");
+  const baseCombos: Combination[] = [];
 
-  const addCombos = (thirdPool: Dish[]) => {
-    for (let i = 0; i < meat.length; i += 1) {
-      for (let j = i + 1; j < meat.length; j += 1) {
-        const first = meat[i];
-        const second = meat[j];
-        if (first.protein === second.protein) continue;
-        if (first.protein === "none" || first.protein === "other") continue;
-        if (second.protein === "none" || second.protein === "other") continue;
-        for (const third of thirdPool) {
-          if (third.id === first.id || third.id === second.id) continue;
-          const dishes = [first, second, third];
-          if (dishes.filter((dish) => dish.spiceLevel > 0).length > settings.maxSpicyDishes) continue;
-          if (!dishes.some((dish) => dish.flavor === "light")) continue;
-          const score = compositionScore(dishes, stats);
-          combos.push({ meat: [first, second], third, score });
-        }
+  for (let i = 0; i < meat.length; i += 1) {
+    for (let j = i + 1; j < meat.length; j += 1) {
+      const first = meat[i];
+      const second = meat[j];
+      if (first.protein === second.protein) continue;
+      if (first.protein === "none" || first.protein === "other") continue;
+      if (second.protein === "none" || second.protein === "other") continue;
+      for (const vegetable of vegetables) {
+        const dishes = [first, second, vegetable];
+        if (dishes.filter((dish) => dish.spiceLevel > 0).length > settings.maxSpicyDishes) continue;
+        baseCombos.push({
+          meat: [first, second],
+          veg: vegetable,
+          soup: null,
+          score: compositionScore(dishes, stats)
+        });
       }
     }
-  };
+  }
 
-  addCombos(preferredThird);
-  if (combos.length === 0 && alternateThird.length > 0) addCombos(alternateThird);
-  if (combos.length === 0 && allThird.length > 0) addCombos([...new Set(allThird)]);
-  return combos;
+  if (!addSoup || soups.length === 0) {
+    return baseCombos.filter((combo) => isValidCombination([...combo.meat, combo.veg], settings));
+  }
+
+  const soupCombos: Combination[] = [];
+  for (const base of baseCombos) {
+    for (const soup of soups) {
+      const dishes = [...base.meat, base.veg, soup];
+      if (!isValidCombination(dishes, settings)) continue;
+      soupCombos.push({ ...base, soup, score: compositionScore(dishes, stats) });
+    }
+  }
+  return soupCombos.length > 0
+    ? soupCombos
+    : baseCombos.filter((combo) => isValidCombination([...combo.meat, combo.veg], settings));
 }
 
 function reasonForMeat(dish: Dish, stats: MealStats): string {
@@ -118,6 +131,7 @@ export function buildLocalRecommendation(input: {
   random?: () => number;
 }): LocalRecommendation {
   const random = input.random ?? Math.random;
+  const addSoup = input.settings.thirdDishDefault === "soup";
   const attempts: Array<{ window: number; ids: Set<string> }> = [
     { window: input.settings.repeatDays, ids: input.repeatIds }
   ];
@@ -130,29 +144,29 @@ export function buildLocalRecommendation(input: {
       attempt.ids,
       input.settings,
       input.stats,
-      input.settings.thirdDishDefault
+      addSoup
     );
     if (combos.length > 0) {
       const chosen = weightedPick(combos, random);
-      const dishes = [...chosen.meat, chosen.third];
+      const dishes = [...chosen.meat, chosen.veg, ...(chosen.soup ? [chosen.soup] : [])];
       const reasons: Record<string, string> = {};
       reasons[chosen.meat[0].id] = reasonForMeat(chosen.meat[0], input.stats);
       reasons[chosen.meat[1].id] = reasonForMeat(chosen.meat[1], input.stats);
-      reasons[chosen.third.id] =
-        chosen.third.role === "soup"
-          ? `第三道选${chosen.third.name}，汤占这一道的位置，不再额外加菜。`
-          : `第三道选${chosen.third.name}，补一份蔬菜、平衡口味。`;
+      reasons[chosen.veg.id] = `配${chosen.veg.name}，保证这桌有一道真正的素菜。`;
+      if (chosen.soup) {
+        reasons[chosen.soup.id] = `再配${chosen.soup.name}；汤是额外一道，不替代素菜。`;
+      }
       const proteins = `${PROTEIN_LABELS[chosen.meat[0].protein]}和${PROTEIN_LABELS[chosen.meat[1].protein]}`;
       const relaxed = attempt.window < input.settings.repeatDays;
       return {
         dishes,
         historyWindowUsed: attempt.window,
         relaxed,
-        summary: `这桌用了${proteins}，第三道配${chosen.third.name}，两道荤菜蛋白质错开${relaxed ? "；近期可选菜不足，已适度放宽重复窗口" : "。"}`,
+        summary: `这桌用了${proteins}，素菜是${chosen.veg.name}${chosen.soup ? `，另配${chosen.soup.name}` : ""}。两道荤菜蛋白质错开${relaxed ? "；近期可选菜不足，已适度放宽重复窗口" : ""}。`,
         reasons,
         diversity: {
           protein: `${PROTEIN_LABELS[chosen.meat[0].protein]}与${PROTEIN_LABELS[chosen.meat[1].protein]}错开。`,
-          vegetable: chosen.third.role === "soup" ? "第三道以汤补位。" : "第三道补充蔬菜。",
+          vegetable: `${chosen.veg.name}提供蔬菜${chosen.soup ? `；${chosen.soup.name}是额外的汤菜，不替代素菜。` : "。"}`,
           flavor: dishes.some((dish) => dish.flavor === "light") ? "至少一道清淡菜，整体不过重。" : "口味适中。"
         }
       };

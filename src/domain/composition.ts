@@ -15,23 +15,23 @@ export function getComposition(dishes: Array<Pick<Dish, "role">>): Composition {
   const veg = dishes.filter((dish) => dish.role === "veg").length;
   const soup = dishes.filter((dish) => dish.role === "soup").length;
   const other = dishes.filter((dish) => dish.role === "other").length;
-  const valid = total === 3 && meat === 2 && ((veg === 1 && soup === 0) || (veg === 0 && soup === 1));
+  const valid = meat === 2 && veg === 1 && soup <= 1 && other === 0 && (total === 3 || total === 4);
 
-  let label = "搭配待调整";
+  let label = `共 ${total} 道 · ${meat} 荤 ${veg} 素 ${soup} 汤`;
   if (total === 0) label = "还没有选菜";
-  else if (total < 3) label = `还差 ${3 - total} 道`;
-  else if (valid && veg === 1) label = "2 荤 1 素 · 共 3 道";
-  else if (valid && soup === 1) label = "2 荤 1 汤 · 共 3 道";
+  else if (valid) label = soup === 1 ? "2 荤 1 素 1 汤 · 共 4 道" : "2 荤 1 素 · 共 3 道";
 
   return { total, meat, veg, soup, other, valid, label };
 }
 
-export function compositionWarnings(dishes: Array<Pick<Dish, "role">>): string[] {
+export function compositionWarnings(
+  dishes: Array<Pick<Dish, "role">>,
+  mode: "generated" | "manual" = "generated"
+): string[] {
+  if (mode === "manual") return [];
   const composition = getComposition(dishes);
   if (composition.valid) return [];
-  if (composition.total > 3) return [`当前 ${composition.total} 道，一桌只能有 3 道菜。`];
-  if (composition.total < 3) return [`当前 ${composition.total} 道，还差 ${3 - composition.total} 道。`];
   return [
-    `当前 ${composition.total} 道：${composition.meat} 荤、${composition.veg} 素、${composition.soup} 汤。需要恰好两荤加一道素菜或汤。`
+    `当前 ${composition.total} 道：${composition.meat} 荤、${composition.veg} 素、${composition.soup} 汤。自动推荐需要 2 荤、1 道素菜，并可按设置额外加 1 道汤；汤不能替代素菜。`
   ];
 }

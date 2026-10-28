@@ -79,11 +79,16 @@ async function createDatabase(): Promise<Database> {
 
 export function getDb(): Promise<Database> {
   if (!globalWithDb.__mingriDbPromise) {
-    globalWithDb.__mingriDbPromise = createDatabase().then(async (db) => {
-      await migrate(db);
-      await seed(db);
-      return db;
-    });
+    globalWithDb.__mingriDbPromise = createDatabase()
+      .then(async (db) => {
+        await migrate(db);
+        await seed(db);
+        return db;
+      })
+      .catch((error) => {
+        globalWithDb.__mingriDbPromise = undefined;
+        throw error;
+      });
   }
   return globalWithDb.__mingriDbPromise;
 }

@@ -4,7 +4,7 @@ import { AppProvider } from "@/components/app-provider";
 
 export const metadata: Metadata = {
   title: "明日菜单 · 家庭 AI 晚餐排程",
-  description: "读取最近一周，用 AI 为家里安排明天的两荤一素/汤，并自动生成采购清单。",
+  description: "读取最近一周，用 AI 为家里安排明天的荤素晚餐，并自动生成采购清单。",
   robots: { index: false, follow: false, nocache: true },
   manifest: "/manifest.webmanifest",
   applicationName: "明日菜单",

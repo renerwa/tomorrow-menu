@@ -20,59 +20,64 @@ function statsFor(candidates = [pork, beef, chicken, veg, soup]) {
   });
 }
 
+function recommend(candidates: typeof pork[], settings = makeSettings(), repeatIds = new Set<string>()) {
+  return buildLocalRecommendation({
+    candidates,
+    settings,
+    stats: statsFor(candidates),
+    repeatIds,
+    repeatIds3Days: new Set(),
+    random: () => 0
+  });
+}
+
 describe("local recommendation fallback", () => {
-  it("always returns two meats with different proteins and a third dish", () => {
+  it("returns two meats with different proteins and a real vegetable by default", () => {
     const candidates = [pork, beef, chicken, veg, soup];
-    const result = buildLocalRecommendation({
-      candidates,
-      settings: makeSettings(),
-      stats: statsFor(candidates),
-      repeatIds: new Set(),
-      repeatIds3Days: new Set(),
-      random: () => 0
-    });
+    const result = recommend(candidates);
 
     expect(result.dishes).toHaveLength(3);
     expect(result.dishes.filter((dish) => dish.role === "meat")).toHaveLength(2);
-    expect(result.dishes.filter((dish) => dish.role === "veg" || dish.role === "soup")).toHaveLength(1);
+    expect(result.dishes.filter((dish) => dish.role === "veg")).toHaveLength(1);
+    expect(result.dishes.filter((dish) => dish.role === "soup")).toHaveLength(0);
     const meats = result.dishes.filter((dish) => dish.role === "meat");
     expect(meats[0].protein).not.toBe(meats[1].protein);
     expect(result.dishes.some((dish) => dish.flavor === "light")).toBe(true);
     expect(result.dishes.filter((dish) => dish.spiceLevel > 0).length).toBeLessThanOrEqual(1);
   });
 
-  it("prefers the configured third-dish role but falls back to the other role", () => {
-    const preferred = buildLocalRecommendation({
-      candidates: [pork, beef, veg, soup],
-      settings: makeSettings({ thirdDishDefault: "veg" }),
-      stats: statsFor([pork, beef, veg, soup]),
-      repeatIds: new Set(),
-      repeatIds3Days: new Set(),
-      random: () => 0
-    });
-    expect(preferred.dishes[2].role).toBe("veg");
+  it("adds soup as a fourth dish without replacing the vegetable", () => {
+    const result = recommend(
+      [pork, beef, veg, soup],
+      makeSettings({ thirdDishDefault: "soup" })
+    );
+    expect(result.dishes).toHaveLength(4);
+    expect(result.dishes.filter((dish) => dish.role === "meat")).toHaveLength(2);
+    expect(result.dishes.filter((dish) => dish.role === "veg")).toHaveLength(1);
+    expect(result.dishes.filter((dish) => dish.role === "soup")).toHaveLength(1);
+    expect(result.summary).toContain("另配");
+    expect(result.diversity.vegetable).toContain("不替代素菜");
+  });
 
-    const fallback = buildLocalRecommendation({
-      candidates: [pork, beef, soup],
-      settings: makeSettings({ thirdDishDefault: "veg" }),
-      stats: statsFor([pork, beef, soup]),
-      repeatIds: new Set(),
-      repeatIds3Days: new Set(),
-      random: () => 0
-    });
-    expect(fallback.dishes[2].role).toBe("soup");
+  it("keeps the three-dish vegetable menu when no soup is available", () => {
+    const result = recommend([pork, beef, veg], makeSettings({ thirdDishDefault: "soup" }));
+    expect(result.dishes).toHaveLength(3);
+    expect(result.dishes.map((dish) => dish.role)).toEqual(["meat", "meat", "veg"]);
+  });
+
+  it("lets the optional soup provide the light dish", () => {
+    const result = recommend([pork, beef, richVeg, soup], makeSettings({ thirdDishDefault: "soup" }));
+    expect(result.dishes).toHaveLength(4);
+    expect(result.dishes.some((dish) => dish.flavor === "light")).toBe(true);
+  });
+
+  it("does not let soup fill the vegetable requirement", () => {
+    expect(() => recommend([pork, beef, soup], makeSettings({ thirdDishDefault: "soup" }))).toThrow(MenuUnavailableError);
   });
 
   it("shortens the repeat window before giving up", () => {
     const candidates = [pork, beef, veg];
-    const result = buildLocalRecommendation({
-      candidates,
-      settings: makeSettings({ repeatDays: 7 }),
-      stats: statsFor(candidates),
-      repeatIds: new Set(candidates.map((dish) => dish.id)),
-      repeatIds3Days: new Set(),
-      random: () => 0
-    });
+    const result = recommend(candidates, makeSettings({ repeatDays: 7 }), new Set(candidates.map((dish) => dish.id)));
     expect(result.historyWindowUsed).toBe(3);
     expect(result.relaxed).toBe(true);
     expect(result.summary).toContain("放宽重复窗口");
@@ -84,15 +89,6 @@ describe("local recommendation fallback", () => {
       makeDish({ id: "beef-spicy", name: "辣牛", protein: "beef", spiceLevel: 1, flavor: "rich" }),
       richVeg
     ];
-    expect(() =>
-      buildLocalRecommendation({
-        candidates,
-        settings: makeSettings({ maxSpicyDishes: 0 }),
-        stats: statsFor(candidates),
-        repeatIds: new Set(),
-        repeatIds3Days: new Set(),
-        random: () => 0
-      })
-    ).toThrow(MenuUnavailableError);
+    expect(() => recommend(candidates, makeSettings({ maxSpicyDishes: 0 }))).toThrow(MenuUnavailableError);
   });
 });
