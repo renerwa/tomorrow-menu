@@ -28,6 +28,8 @@ import { DishSeal, DishTags, EmptyState, LoadingBlock, Modal, PageHeader, Segmen
 
 type PickerMode = "add" | "replace";
 
+const PICKER_LOAD_TIMEOUT_MS = 12_000;
+
 interface PickerState {
   open: boolean;
   mode: PickerMode;
@@ -47,11 +49,14 @@ export function PlannerPage() {
   const [picker, setPicker] = useState<PickerState>({ open: false, mode: "add", dish: null, role: "veg" });
   const [autoDishes, setAutoDishes] = useState<DishWithRecipe[]>([]);
   const [pickerLoading, setPickerLoading] = useState(false);
+  const [pickerError, setPickerError] = useState<string | null>(null);
   const [pickerQuery, setPickerQuery] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmIssues, setConfirmIssues] = useState<string[]>([]);
   const [confirmBusy, setConfirmBusy] = useState(false);
   const loadSequence = useRef(0);
+  const pickerLoadSequence = useRef(0);
+  const pickerAbortController = useRef<AbortController | null>(null);
 
   const loadPlan = useCallback(async () => {
     if (!selectedDate) return;
@@ -73,6 +78,13 @@ export function PlannerPage() {
   useEffect(() => {
     void loadPlan();
   }, [loadPlan]);
+
+  useEffect(() => {
+    return () => {
+      pickerLoadSequence.current += 1;
+      pickerAbortController.current?.abort();
+    };
+  }, []);
 
   const plan = data?.plan ?? null;
   const composition = data?.composition;
@@ -151,16 +163,31 @@ export function PlannerPage() {
     const nextRole =
       role ??
       (dish?.role === "meat" ? "meat" : dish?.role === "soup" ? "soup" : dish ? "veg" : info?.settings.thirdDishDefault ?? "veg");
+    const sequence = ++pickerLoadSequence.current;
+    pickerAbortController.current?.abort();
+    const controller = new AbortController();
+    pickerAbortController.current = controller;
+    const timeoutId = window.setTimeout(() => controller.abort(), PICKER_LOAD_TIMEOUT_MS);
     setPicker({ open: true, mode, dish, role: nextRole });
     setPickerQuery("");
+    setPickerError(null);
     setPickerLoading(true);
     try {
-      const result = await api<{ dishes: DishWithRecipe[] }>("/api/dishes?view=auto");
+      const result = await api<{ dishes: DishWithRecipe[] }>("/api/dishes?view=auto", { signal: controller.signal });
+      if (sequence !== pickerLoadSequence.current) return;
       setAutoDishes(result.dishes);
     } catch (pickerError) {
-      toast(pickerError instanceof Error ? pickerError.message : "菜库加载失败", "error");
+      if (sequence !== pickerLoadSequence.current) return;
+      const message = controller.signal.aborted
+        ? "选菜数据加载超时，请重新加载。"
+        : pickerError instanceof Error
+          ? pickerError.message
+          : "菜库加载失败";
+      setPickerError(message);
+      toast(message, "error");
     } finally {
-      setPickerLoading(false);
+      window.clearTimeout(timeoutId);
+      if (sequence === pickerLoadSequence.current) setPickerLoading(false);
     }
   }
 
@@ -463,6 +490,16 @@ export function PlannerPage() {
         </div>
         {pickerLoading ? (
           <LoadingBlock label="正在筛可推荐的菜…" />
+        ) : pickerError ? (
+          <EmptyState
+            title="菜库没有加载出来"
+            body={pickerError}
+            action={
+              <button className="btn btn-ghost" onClick={() => void openPicker(picker.mode, picker.dish, picker.role)}>
+                重新加载
+              </button>
+            }
+          />
         ) : filteredPickerDishes.length === 0 ? (
           <EmptyState title="这个角色暂时没有可选的菜" body="先到菜库补全食材，或检查忌口与停用设置。" />
         ) : (

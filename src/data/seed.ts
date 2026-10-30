@@ -29,8 +29,16 @@ export const seedRecipes: Array<Omit<Recipe, "updatedAt">> = seedDishes
     ingredientIds: readyRecipeIngredientIds[dish.name]
   }));
 
-if (seedRecipes.length !== 38) {
-  throw new Error(`Expected 38 complete seed recipes, got ${seedRecipes.length}`);
+const missingRecipeDishNames = seedDishes
+  .filter((dish) => !readyRecipeIngredientIds[dish.name])
+  .map((dish) => dish.name);
+
+if (missingRecipeDishNames.length > 0) {
+  throw new Error(`Missing complete seed recipes: ${missingRecipeDishNames.join(", ")}`);
+}
+
+if (seedRecipes.length !== seedDishes.length) {
+  throw new Error(`Expected ${seedDishes.length} complete seed recipes, got ${seedRecipes.length}`);
 }
 
 for (const recipe of seedRecipes) {

@@ -15,12 +15,14 @@ describe("seed menu library", () => {
     expect(counts).toMatchObject({ meat: 98, veg: 47, soup: 22, other: 13 });
   });
 
-  it("has at least 38 ready dishes in the required role split", () => {
+  it("has a complete ingredient list for all 180 dishes", () => {
     const ready = seedDishes.filter((dish) => dish.dataStatus === "ready");
-    expect(seedRecipes).toHaveLength(38);
-    expect(ready.filter((dish) => dish.role === "meat")).toHaveLength(20);
-    expect(ready.filter((dish) => dish.role === "veg")).toHaveLength(12);
-    expect(ready.filter((dish) => dish.role === "soup")).toHaveLength(6);
+    expect(seedRecipes).toHaveLength(180);
+    expect(ready).toHaveLength(180);
+    expect(ready.filter((dish) => dish.role === "meat")).toHaveLength(98);
+    expect(ready.filter((dish) => dish.role === "veg")).toHaveLength(47);
+    expect(ready.filter((dish) => dish.role === "soup")).toHaveLength(22);
+    expect(ready.filter((dish) => dish.role === "other")).toHaveLength(13);
   });
 
   it("keeps ingredient ids and normalized names unique", () => {
@@ -28,11 +30,11 @@ describe("seed menu library", () => {
     expect(new Set(seedIngredients.map((ingredient) => ingredient.normalizedName)).size).toBe(seedIngredients.length);
   });
 
-  it("gives every ready auto-plannable dish a complete recipe", () => {
+  it("gives every dish a complete recipe", () => {
     const ingredientIds = new Set(seedIngredients.map((ingredient) => ingredient.id));
     const recipeMap = new Map(seedRecipes.map((recipe) => [recipe.dishId, recipe.ingredientIds]));
 
-    for (const dish of seedDishes.filter((item) => item.dataStatus === "ready" && item.autoPlannable)) {
+    for (const dish of seedDishes) {
       const recipe = recipeMap.get(dish.id);
       expect(recipe, dish.name).toBeDefined();
       expect(recipe?.length, dish.name).toBeGreaterThan(0);
@@ -42,12 +44,23 @@ describe("seed menu library", () => {
   });
 
   it("uses valid proteins for meat and keeps vegetarian dishes meat-free", () => {
+    const ingredientById = new Map(seedIngredients.map((ingredient) => [ingredient.id, ingredient]));
+    const recipeByDishId = new Map(seedRecipes.map((recipe) => [recipe.dishId, recipe]));
+
     for (const dish of seedDishes) {
       if (dish.role === "meat") {
         expect(dish.protein, dish.name).not.toBe("none");
         expect(dish.protein, dish.name).not.toBe("other");
       }
-      if (dish.role === "veg") expect(dish.protein, dish.name).toBe("none");
+      if (dish.role === "veg") {
+        expect(dish.protein, dish.name).toBe("none");
+        const recipe = recipeByDishId.get(dish.id);
+        expect(recipe, dish.name).toBeDefined();
+        expect(
+          recipe?.ingredientIds.some((id) => ingredientById.get(id)?.category === "meat"),
+          dish.name
+        ).toBe(false);
+      }
       if (dish.role === "other") expect(dish.autoPlannable, dish.name).toBe(false);
     }
   });

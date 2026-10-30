@@ -1,7 +1,7 @@
 {
   "counts": {
     "meat": 98,
-    "ready": 38,
+    "ready": 180,
     "veg": 47,
     "soup": 22,
     "other": 13
@@ -29,7 +29,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "小炒肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -42,7 +42,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "爆炒猪肺",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -68,7 +68,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "肝腰合炒",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -94,7 +94,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "泡椒爆腰花",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -107,7 +107,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "酸菜肉丝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -133,7 +133,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "土豆肉丝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -146,7 +146,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "农家一碗香",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -159,7 +159,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "韭黄肉丝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -172,7 +172,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "爆炒卤猪头肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -185,7 +185,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "香干肉丝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -198,7 +198,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "麻辣猪头肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -211,7 +211,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "洋葱肉丝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -224,7 +224,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "鲜椒朱毛肚",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -237,7 +237,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "仔姜肉丝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -250,7 +250,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "芹菜肉丝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -263,7 +263,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "肉末茄子",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -276,7 +276,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "包菜炒肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -289,7 +289,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "包菜回锅肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -302,7 +302,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "酸豇豆炒肉末",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -328,7 +328,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "梅菜扣肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -341,7 +341,7 @@
       "flavor": "light",
       "sourceGroup": "猪肉",
       "normalizedName": "蒜泥白肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -354,7 +354,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "菠萝咕噜肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -367,7 +367,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "扇子骨",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -380,7 +380,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "红烧肥肠",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -393,7 +393,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "泡椒肥肠",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -406,7 +406,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "糖醋里脊",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -432,7 +432,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "蒜香排骨",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -445,7 +445,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "麻辣水煮小酥肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -458,7 +458,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "尖椒炒腊肠",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -471,7 +471,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "豌豆片炒香肠",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -484,7 +484,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "花菜炒腊肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -497,7 +497,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "卜豆角腊肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -510,7 +510,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "柴火香干炒腊肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -523,7 +523,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "折耳根腊肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -536,7 +536,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "胡萝卜肉丝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -549,7 +549,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "合江臊子豆花",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -562,7 +562,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "尖椒毛豆炒肉丝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -575,7 +575,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉",
       "normalizedName": "蕨菜炒肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -601,7 +601,7 @@
       "flavor": "rich",
       "sourceGroup": "猪肉",
       "normalizedName": "泡椒肉丝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -614,7 +614,7 @@
       "flavor": "light",
       "sourceGroup": "猪肉",
       "normalizedName": "凉拌猪耳朵",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -653,7 +653,7 @@
       "flavor": "normal",
       "sourceGroup": "牛肉",
       "normalizedName": "青椒牛肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -666,7 +666,7 @@
       "flavor": "normal",
       "sourceGroup": "牛肉",
       "normalizedName": "洋葱牛肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -679,7 +679,7 @@
       "flavor": "normal",
       "sourceGroup": "牛肉",
       "normalizedName": "粉蒸牛肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -692,7 +692,7 @@
       "flavor": "normal",
       "sourceGroup": "牛肉",
       "normalizedName": "香菜牛肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -705,7 +705,7 @@
       "flavor": "normal",
       "sourceGroup": "牛肉",
       "normalizedName": "芹菜牛肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -731,7 +731,7 @@
       "flavor": "normal",
       "sourceGroup": "牛肉",
       "normalizedName": "竹笋烧牛肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -757,7 +757,7 @@
       "flavor": "rich",
       "sourceGroup": "牛肉",
       "normalizedName": "夫妻肺片",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -770,7 +770,7 @@
       "flavor": "rich",
       "sourceGroup": "牛肉",
       "normalizedName": "水煮牛肉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -783,7 +783,7 @@
       "flavor": "normal",
       "sourceGroup": "牛肉",
       "normalizedName": "葱油毛肚",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -796,7 +796,7 @@
       "flavor": "normal",
       "sourceGroup": "鸡肉",
       "normalizedName": "烧鸡公",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -809,7 +809,7 @@
       "flavor": "normal",
       "sourceGroup": "鸡肉",
       "normalizedName": "尖椒鸡",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -848,7 +848,7 @@
       "flavor": "rich",
       "sourceGroup": "鸡肉",
       "normalizedName": "干锅手撕鸡",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -861,7 +861,7 @@
       "flavor": "normal",
       "sourceGroup": "鸡肉",
       "normalizedName": "酸辣鸡杂",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -874,7 +874,7 @@
       "flavor": "rich",
       "sourceGroup": "鸡肉",
       "normalizedName": "麻辣口水鸡",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -887,7 +887,7 @@
       "flavor": "rich",
       "sourceGroup": "鸡肉",
       "normalizedName": "泡椒郡肝",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -913,7 +913,7 @@
       "flavor": "normal",
       "sourceGroup": "鸡肉",
       "normalizedName": "柠檬干煎鸡翅",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -926,7 +926,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋类",
       "normalizedName": "葱花蛋饼",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -939,7 +939,7 @@
       "flavor": "rich",
       "sourceGroup": "蛋类",
       "normalizedName": "剁椒炒鸡蛋",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -978,7 +978,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋类",
       "normalizedName": "蒜薹鸡蛋炒外婆菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -991,7 +991,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋类",
       "normalizedName": "洋葱炒蛋",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1004,7 +1004,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋类",
       "normalizedName": "三鲜皮蛋豌豆尖",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1017,7 +1017,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋类",
       "normalizedName": "烧椒皮蛋",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1030,7 +1030,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋类",
       "normalizedName": "金沙玉米",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1043,7 +1043,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋类",
       "normalizedName": "蟹黄豆花",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1056,7 +1056,7 @@
       "flavor": "light",
       "sourceGroup": "蛋类",
       "normalizedName": "凉拌皮蛋",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1069,7 +1069,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋类",
       "normalizedName": "青椒皮蛋",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1095,7 +1095,7 @@
       "flavor": "normal",
       "sourceGroup": "鱼类",
       "normalizedName": "金汤酸菜鱼",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1108,7 +1108,7 @@
       "flavor": "rich",
       "sourceGroup": "鱼类",
       "normalizedName": "剁椒鱼头",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1134,7 +1134,7 @@
       "flavor": "normal",
       "sourceGroup": "鱼类",
       "normalizedName": "自贡跳水鱼",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1160,7 +1160,7 @@
       "flavor": "normal",
       "sourceGroup": "鱼类",
       "normalizedName": "沸腾鱼",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1173,7 +1173,7 @@
       "flavor": "rich",
       "sourceGroup": "鱼类",
       "normalizedName": "烤鱼",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1199,7 +1199,7 @@
       "flavor": "rich",
       "sourceGroup": "虾类",
       "normalizedName": "香辣虾",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1212,7 +1212,7 @@
       "flavor": "rich",
       "sourceGroup": "兔肉",
       "normalizedName": "姜丝鲜椒兔",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1225,7 +1225,7 @@
       "flavor": "rich",
       "sourceGroup": "兔肉",
       "normalizedName": "麻辣冷吃兔",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1238,7 +1238,7 @@
       "flavor": "rich",
       "sourceGroup": "其他水产",
       "normalizedName": "干锅牛蛙",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1251,7 +1251,7 @@
       "flavor": "normal",
       "sourceGroup": "其他水产",
       "normalizedName": "铁板鱿鱼",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1264,7 +1264,7 @@
       "flavor": "rich",
       "sourceGroup": "其他水产",
       "normalizedName": "香辣蟹",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1277,7 +1277,7 @@
       "flavor": "rich",
       "sourceGroup": "其他水产",
       "normalizedName": "麻辣小龙虾",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1303,7 +1303,7 @@
       "flavor": "rich",
       "sourceGroup": "素菜",
       "normalizedName": "干锅花菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1316,7 +1316,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "虎皮青椒",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1329,7 +1329,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "辣炒千页豆腐",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1355,7 +1355,7 @@
       "flavor": "rich",
       "sourceGroup": "素菜",
       "normalizedName": "麻辣豆皮",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1368,7 +1368,7 @@
       "flavor": "rich",
       "sourceGroup": "素菜",
       "normalizedName": "麻辣土豆片",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1381,7 +1381,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "魔芋",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1394,7 +1394,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "木耳炒青菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1407,7 +1407,7 @@
       "flavor": "rich",
       "sourceGroup": "素菜",
       "normalizedName": "泡椒炒儿菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1420,7 +1420,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "青菜豆腐羹",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1472,7 +1472,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "酸辣白菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1485,7 +1485,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "酸辣包菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1498,7 +1498,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "酸辣绿豆芽",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1550,7 +1550,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "外婆菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1563,7 +1563,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "香菇青菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1576,7 +1576,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "油菜尖",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1589,7 +1589,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "油炸金针菇",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1602,7 +1602,7 @@
       "flavor": "light",
       "sourceGroup": "素菜",
       "normalizedName": "清炒苔颠",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1615,7 +1615,7 @@
       "flavor": "light",
       "sourceGroup": "素菜",
       "normalizedName": "清炒苦瓜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1628,7 +1628,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "佛手瓜尖尖龙须菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1641,7 +1641,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "苋菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1654,7 +1654,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "血皮菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1667,7 +1667,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "花菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1693,7 +1693,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "西葫芦",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1706,7 +1706,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "莴笋",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1719,7 +1719,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "炝炒凤尾",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1732,7 +1732,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "瓢儿菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1745,7 +1745,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "马苋菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1771,7 +1771,7 @@
       "flavor": "rich",
       "sourceGroup": "素菜",
       "normalizedName": "干煸茄子",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1784,7 +1784,7 @@
       "flavor": "rich",
       "sourceGroup": "素菜",
       "normalizedName": "糖醋莲白",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1797,7 +1797,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "炒冬瓜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1810,7 +1810,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "杏鲍菇",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1823,7 +1823,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "青椒玉米",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1849,7 +1849,7 @@
       "flavor": "light",
       "sourceGroup": "素菜",
       "normalizedName": "凉拌折耳根",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1875,7 +1875,7 @@
       "flavor": "light",
       "sourceGroup": "素菜",
       "normalizedName": "凉拌豆角",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1888,7 +1888,7 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "泡菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1901,7 +1901,7 @@
       "flavor": "normal",
       "sourceGroup": "素汤",
       "normalizedName": "豆腐菜汤木耳菜",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1927,7 +1927,7 @@
       "flavor": "light",
       "sourceGroup": "素汤",
       "normalizedName": "豆腐汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1940,7 +1940,7 @@
       "flavor": "normal",
       "sourceGroup": "素汤",
       "normalizedName": "酸菜粉丝汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1953,7 +1953,7 @@
       "flavor": "light",
       "sourceGroup": "素汤",
       "normalizedName": "银耳莲子百合汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1966,7 +1966,7 @@
       "flavor": "light",
       "sourceGroup": "素汤",
       "normalizedName": "南瓜绿豆汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -1979,7 +1979,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋汤",
       "normalizedName": "黄瓜皮蛋汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2018,7 +2018,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋汤",
       "normalizedName": "丝瓜蛋汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2031,7 +2031,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋汤",
       "normalizedName": "小白菜蛋汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2044,7 +2044,7 @@
       "flavor": "normal",
       "sourceGroup": "蛋汤",
       "normalizedName": "豌豆颠蛋汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2070,7 +2070,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉汤",
       "normalizedName": "花生猪蹄汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2083,7 +2083,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉汤",
       "normalizedName": "玉米胡萝卜猪骨汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2096,7 +2096,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉汤",
       "normalizedName": "莲藕花生排骨汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2109,7 +2109,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉汤",
       "normalizedName": "萝卜滑肉汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2122,7 +2122,7 @@
       "flavor": "normal",
       "sourceGroup": "猪肉汤",
       "normalizedName": "豌豆颠泡皮汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2148,7 +2148,7 @@
       "flavor": "normal",
       "sourceGroup": "其他蛋白汤",
       "normalizedName": "海带鸡汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2174,7 +2174,7 @@
       "flavor": "normal",
       "sourceGroup": "其他蛋白汤",
       "normalizedName": "羊肉汤",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false
     },
@@ -2187,7 +2187,7 @@
       "flavor": "normal",
       "sourceGroup": "待确认",
       "normalizedName": "香酥藕盒",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2200,7 +2200,7 @@
       "flavor": "normal",
       "sourceGroup": "主食",
       "normalizedName": "豆花饭",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2213,7 +2213,7 @@
       "flavor": "normal",
       "sourceGroup": "主食",
       "normalizedName": "四季豆焖饭",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2226,7 +2226,7 @@
       "flavor": "normal",
       "sourceGroup": "主食",
       "normalizedName": "扬州炒饭",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2239,7 +2239,7 @@
       "flavor": "normal",
       "sourceGroup": "主食",
       "normalizedName": "蛋炒饭",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2252,7 +2252,7 @@
       "flavor": "normal",
       "sourceGroup": "小吃与甜品",
       "normalizedName": "凉糕",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2265,7 +2265,7 @@
       "flavor": "normal",
       "sourceGroup": "小吃与甜品",
       "normalizedName": "冰粉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2278,7 +2278,7 @@
       "flavor": "normal",
       "sourceGroup": "小吃与甜品",
       "normalizedName": "李子",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2291,7 +2291,7 @@
       "flavor": "normal",
       "sourceGroup": "小吃与甜品",
       "normalizedName": "红糖糍粑",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2304,7 +2304,7 @@
       "flavor": "normal",
       "sourceGroup": "小吃与甜品",
       "normalizedName": "白凉粉",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2317,7 +2317,7 @@
       "flavor": "normal",
       "sourceGroup": "小吃与甜品",
       "normalizedName": "凉皮",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2330,7 +2330,7 @@
       "flavor": "normal",
       "sourceGroup": "小吃与甜品",
       "normalizedName": "炸花生",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     },
@@ -2343,7 +2343,7 @@
       "flavor": "rich",
       "sourceGroup": "其他",
       "normalizedName": "水煮玉米",
-      "dataStatus": "draft",
+      "dataStatus": "ready",
       "autoPlannable": false,
       "isCustom": false
     }

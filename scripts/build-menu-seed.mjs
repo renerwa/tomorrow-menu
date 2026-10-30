@@ -23,17 +23,6 @@ const proteinByHeading = {
 const waterProtein = { 牛蛙: "frog", 鱿鱼: "squid", 蟹: "crab", 小龙虾: "crayfish" };
 const soupProtein = { 牛肉: "beef", 鸡肉: "chicken", 鱼: "fish", 羊肉: "lamb" };
 
-const readyNames = [
-  "回锅肉", "青椒肉丝", "鱼香肉丝", "水煮肉片", "红烧肉", "糖醋排骨", "蚂蚁上树",
-  "小炒黄牛肉", "仔姜牛肉", "番茄牛腩", "土豆烧牛腩",
-  "宫保鸡丁", "辣子鸡", "可乐鸡翅",
-  "番茄炒蛋", "韭菜炒鸡蛋",
-  "红烧小黄鱼", "酸菜黑鱼", "水煮鱼片", "宫保虾球",
-  "干煸四季豆", "麻辣豆腐", "蒜蓉生菜", "藤藤菜（空心菜）", "清炒茼蒿", "酸辣土豆丝",
-  "鱼香茄子", "清炒山药片", "蒜泥黄瓜", "西蓝花", "清炒藕丁", "凉拌三丝",
-  "冬瓜玉米汤", "番茄蛋汤", "紫菜蛋汤", "玉米山药排骨汤", "酸汤肥牛", "鲫鱼汤"
-];
-
 function normalizeName(value) {
   return value.normalize("NFKC").toLowerCase().replace(/[\s()（）·、，,。.\-—_/]/g, "");
 }
@@ -131,12 +120,11 @@ const dishes = parsed.map((dish, index) => {
   let normalizedName = normalizeName(dish.name);
   if (normalized.has(normalizedName)) normalizedName = `${normalizedName}-${index + 1}`;
   normalized.add(normalizedName);
-  const ready = readyNames.includes(dish.name);
   return {
     id: `d${String(index + 1).padStart(3, "0")}`,
     ...dish,
     normalizedName,
-    dataStatus: ready ? "ready" : "draft",
+    dataStatus: "ready",
     autoPlannable: dish.role !== "other",
     isCustom: false
   };
@@ -148,13 +136,11 @@ const counts = dishes.reduce((acc, dish) => {
   return acc;
 }, {});
 
-const missingReady = readyNames.filter((name) => !dishes.some((dish) => dish.name === name));
 if (dishes.length !== 180) throw new Error(`Expected 180 dishes, got ${dishes.length}`);
 if (counts.meat !== 98 || counts.veg !== 47 || counts.soup !== 22) {
   throw new Error(`Unexpected role counts: ${JSON.stringify(counts)}`);
 }
-if (counts.ready !== 38) throw new Error(`Expected 38 ready dishes, got ${counts.ready}`);
-if (missingReady.length) throw new Error(`Missing ready dishes: ${missingReady.join(", ")}`);
+if (counts.ready !== 180) throw new Error(`Expected 180 ready dishes, got ${counts.ready}`);
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, JSON.stringify({ counts, dishes }, null, 2) + "\n", "utf8");

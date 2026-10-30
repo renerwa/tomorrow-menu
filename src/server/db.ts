@@ -293,7 +293,11 @@ async function seed(db: Database): Promise<void> {
     await db.query(
       `INSERT INTO dishes(id, family_id, name, normalized_name, role, protein, spice_level, flavor, source_group, data_status, auto_plannable, is_custom)
        VALUES ${placeholders.join(",")}
-       ON CONFLICT (id) DO NOTHING`,
+       ON CONFLICT (id) DO UPDATE SET
+         data_status = EXCLUDED.data_status,
+         auto_plannable = EXCLUDED.auto_plannable,
+         updated_at = NOW()
+       WHERE dishes.family_id IS NULL`,
       dishRows.flat()
     );
   }
@@ -311,7 +315,10 @@ async function seed(db: Database): Promise<void> {
     await db.query(
       `INSERT INTO recipes(dish_id, family_id, ingredient_ids)
        VALUES ${placeholders.join(",")}
-       ON CONFLICT (dish_id) DO NOTHING`,
+       ON CONFLICT (dish_id) DO UPDATE SET
+         ingredient_ids = EXCLUDED.ingredient_ids,
+         updated_at = NOW()
+       WHERE recipes.family_id IS NULL`,
       recipeRows.flat()
     );
   }
