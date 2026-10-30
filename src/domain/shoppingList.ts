@@ -5,6 +5,7 @@ import type {
   Recipe,
   Settings,
   ShoppingGroup,
+  ShoppingItem,
   ShoppingList
 } from "./types";
 import { CATEGORY_LABELS, CATEGORY_ORDER } from "./labels";
@@ -36,6 +37,7 @@ export function buildShoppingList(input: {
   const recipeMap = new Map(input.recipes.map((recipe) => [recipe.dishId, recipe.ingredientIds]));
   const issues: string[] = [];
   const collectedIds: string[] = [];
+  const dishNamesByIngredient = new Map<string, string[]>();
 
   for (const dish of input.dishes) {
     const recipe = recipeMap.get(dish.id);
@@ -48,6 +50,11 @@ export function buildShoppingList(input: {
         issues.push(`「${dish.name}」引用了不存在的食材 ${ingredientId}`);
       }
       collectedIds.push(ingredientId);
+      const dishNames = dishNamesByIngredient.get(ingredientId) ?? [];
+      if (!dishNames.includes(dish.name)) {
+        dishNames.push(dish.name);
+        dishNamesByIngredient.set(ingredientId, dishNames);
+      }
     }
   }
   if (issues.length > 0) throw new ShoppingListError(issues);
@@ -63,9 +70,13 @@ export function buildShoppingList(input: {
   const toBuy = allIngredients.filter((ingredient) => !pantry.has(ingredient.id));
 
   const groups: ShoppingGroup[] = CATEGORY_ORDER.flatMap((category) => {
-    const items = toBuy
+    const items: ShoppingItem[] = toBuy
       .filter((ingredient) => ingredient.category === category)
-      .sort((a, b) => a.name.localeCompare(b.name, "zh-CN"));
+      .sort((a, b) => a.name.localeCompare(b.name, "zh-CN"))
+      .map((ingredient) => ({
+        ...ingredient,
+        dishNames: dishNamesByIngredient.get(ingredient.id) ?? []
+      }));
     return items.length > 0 ? [{ category, label: CATEGORY_LABELS[category], items }] : [];
   });
 
@@ -73,8 +84,11 @@ export function buildShoppingList(input: {
   const buyNames = toBuy
     .slice()
     .sort((a, b) => a.name.localeCompare(b.name, "zh-CN"))
-    .map((ingredient) => ingredient.name)
-    .join("、");
+    .map((ingredient) => {
+      const dishNames = dishNamesByIngredient.get(ingredient.id) ?? [];
+      return `${ingredient.name}（用于：${dishNames.join("、")}）`;
+    })
+    .join("\n");
   const copyText = `${formatChineseDate(input.targetDate)}晚餐：${dishNames}\n\n需要买：\n${buyNames || "无需采购"}`;
 
   return {

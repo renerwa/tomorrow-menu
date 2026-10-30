@@ -205,7 +205,11 @@ export interface AiCandidate {
 export interface ShoppingGroup {
   category: IngredientCategory;
   label: string;
-  items: Ingredient[];
+  items: ShoppingItem[];
+}
+
+export interface ShoppingItem extends Ingredient {
+  dishNames: string[];
 }
 
 export interface ShoppingList {

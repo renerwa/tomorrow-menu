@@ -586,12 +586,15 @@ body.sheet-open { overflow: hidden; }
 .buy-group > h3 > span { width: 5px; height: 5px; border-radius: 50%; background: var(--chili); }
 .buy-group h3 small { margin-left: auto; color: var(--ink-faint); font: 400 8px/1 var(--body); }
 .buy-group > div { padding: 0 12px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255, 251, 243, 0.42); }
-.check-row { display: flex; width: 100%; min-height: 50px; align-items: center; gap: 11px; padding: 0; border: 0; border-bottom: 1px solid rgba(30, 43, 36, 0.075); background: transparent; color: var(--ink); text-align: left; }
+.check-row { display: flex; width: 100%; min-height: 56px; align-items: center; gap: 11px; padding: 0; border: 0; border-bottom: 1px solid rgba(30, 43, 36, 0.075); background: transparent; color: var(--ink); text-align: left; }
 .check-row:last-child { border-bottom: 0; }
 .check-box { display: grid; width: 22px; height: 22px; flex: 0 0 auto; place-items: center; border: 1px solid var(--line-strong); border-radius: 7px; color: var(--paper); transition: 0.15s ease; }
 .check-row.checked .check-box { border-color: var(--sage); background: var(--sage); }
 .check-row.checked .check-name { color: var(--ink-faint); text-decoration: line-through; }
+.check-content { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 3px; padding: 9px 0; }
 .check-name { font-size: 12px; }
+.check-use { color: var(--ink-faint); font-size: 9px; line-height: 1.5; }
+.check-row.checked .check-use { color: rgba(30, 43, 36, 0.32); }
 .pantry-panel { margin-top: 17px; padding: 11px 13px; border: 1px dashed var(--line-strong); border-radius: 13px; }
 .pantry-panel summary { cursor: pointer; color: var(--ink-soft); font-size: 10px; }
 .pantry-panel .tag-wrap { margin: 9px 0; }

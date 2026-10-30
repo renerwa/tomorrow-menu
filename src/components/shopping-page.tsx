@@ -134,7 +134,10 @@ export function ShoppingPage() {
                           aria-pressed={isChecked}
                         >
                           <span className="check-box">{isChecked ? <Check size={13} /> : null}</span>
-                          <span className="check-name">{item.name}</span>
+                          <span className="check-content">
+                            <span className="check-name">{item.name}</span>
+                            <span className="check-use">用于：{item.dishNames.join("、")}</span>
+                          </span>
                         </button>
                       );
                     })}

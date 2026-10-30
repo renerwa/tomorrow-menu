@@ -46,8 +46,11 @@ describe("shopping list", () => {
       "cola"
     ]);
     expect(list.excluded.map((item) => item.id)).toEqual(["salt"]);
+    const tomatoItem = list.groups.flatMap((group) => group.items).find((item) => item.id === "tomato");
+    expect(tomatoItem?.dishNames).toEqual(["番茄猪柳", "清炖牛腩"]);
     expect(list.copyText).toContain("10月29日晚餐：番茄猪柳、清炖牛腩、葱花豆腐");
     expect(list.copyText).toContain("需要买：");
+    expect(list.copyText).toContain("番茄（用于：番茄猪柳、清炖牛腩）");
     expect(list.copyText).not.toContain("盐");
   });
 
