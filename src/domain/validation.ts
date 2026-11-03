@@ -1,5 +1,4 @@
 import type { Dish, Settings } from "./types";
-import { PROTEIN_LABELS } from "./labels";
 
 export interface SelectionValidationContext {
   candidates: Dish[];
@@ -29,6 +28,12 @@ export function validateSelection(
 
   if (mode === "manual") return [...new Set(issues)];
 
+  for (const dish of dishes) {
+    if (context.repeatDishIds.has(dish.id)) {
+      issues.push(`菜品「${dish.name}」在重复窗口内已经出现过。`);
+    }
+  }
+
   const meat = dishes.filter((dish) => dish.role === "meat");
   const veg = dishes.filter((dish) => dish.role === "veg");
   const soup = dishes.filter((dish) => dish.role === "soup");
@@ -40,9 +45,6 @@ export function validateSelection(
   if (soup.length > 1) issues.push(`自动推荐最多配 1 道汤，当前为 ${soup.length} 道。`);
   if (dishes.some((dish) => dish.role === "other")) issues.push("非推荐池菜品不能进入自动晚餐组合。");
   if (meat.length === 2) {
-    if (meat[0].protein === meat[1].protein) {
-      issues.push(`两道荤菜的主蛋白质必须不同，当前都是${PROTEIN_LABELS[meat[0].protein]}。`);
-    }
     if (meat.some((dish) => dish.protein === "none" || dish.protein === "other")) {
       issues.push("荤菜必须有明确的主蛋白质。");
     }
@@ -51,7 +53,6 @@ export function validateSelection(
   if (spicy > context.settings.maxSpicyDishes) {
     issues.push(`辣菜有 ${spicy} 道，超过上限 ${context.settings.maxSpicyDishes} 道。`);
   }
-  if (!dishes.some((dish) => dish.flavor === "light")) issues.push("整桌至少需要一道清淡菜。");
 
   return [...new Set(issues)];
 }
@@ -67,10 +68,6 @@ export function selectionWarnings(dishes: Dish[], context: SelectionValidationCo
   }
   if (spicy > context.settings.maxSpicyDishes) {
     warnings.push(`辣菜有 ${spicy} 道，超过上限 ${context.settings.maxSpicyDishes} 道。`);
-  }
-  if (!dishes.some((dish) => dish.flavor === "light")) warnings.push("整桌没有清淡菜，口味可能偏重。");
-  if (meat.length >= 2 && new Set(meat.map((dish) => dish.protein)).size < meat.length) {
-    warnings.push("这桌有多道荤菜使用相同主蛋白质。");
   }
   if (veg.length === 0) warnings.push("这桌没有素菜；汤菜不替代素菜。");
 

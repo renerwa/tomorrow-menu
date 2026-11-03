@@ -1,8 +1,8 @@
 {
   "counts": {
-    "meat": 98,
-    "ready": 180,
-    "veg": 47,
+    "meat": 99,
+    "ready": 182,
+    "veg": 48,
     "soup": 22,
     "other": 13
   },
@@ -1282,6 +1282,19 @@
       "isCustom": false
     },
     {
+      "id": "d181",
+      "name": "香辣花甲",
+      "role": "meat",
+      "protein": "shellfish",
+      "spiceLevel": 2,
+      "flavor": "rich",
+      "sourceGroup": "其他水产",
+      "normalizedName": "香辣花甲",
+      "dataStatus": "ready",
+      "autoPlannable": true,
+      "isCustom": false
+    },
+    {
       "id": "d099",
       "name": "干煸四季豆",
       "role": "veg",
@@ -1888,6 +1901,19 @@
       "flavor": "normal",
       "sourceGroup": "素菜",
       "normalizedName": "泡菜",
+      "dataStatus": "ready",
+      "autoPlannable": true,
+      "isCustom": false
+    },
+    {
+      "id": "d182",
+      "name": "香煎土豆",
+      "role": "veg",
+      "protein": "none",
+      "spiceLevel": 0,
+      "flavor": "normal",
+      "sourceGroup": "补充菜",
+      "normalizedName": "香煎土豆",
       "dataStatus": "ready",
       "autoPlannable": true,
       "isCustom": false

@@ -20,7 +20,7 @@ const proteinByHeading = {
   猪肉汤: "pork"
 };
 
-const waterProtein = { 牛蛙: "frog", 鱿鱼: "squid", 蟹: "crab", 小龙虾: "crayfish" };
+const waterProtein = { 牛蛙: "frog", 鱿鱼: "squid", 蟹: "crab", 小龙虾: "crayfish", 花甲: "shellfish" };
 const soupProtein = { 牛肉: "beef", 鸡肉: "chicken", 鱼: "fish", 羊肉: "lamb" };
 
 function normalizeName(value) {
@@ -115,13 +115,24 @@ for (const line of lines) {
   parsed.push({ name, role: activeRole, protein, spiceLevel, flavor, sourceGroup: activeGroup });
 }
 
+const existing = fs.existsSync(outputPath)
+  ? JSON.parse(fs.readFileSync(outputPath, "utf8"))
+  : { dishes: [] };
+const existingIdByName = new Map(existing.dishes.map((dish) => [dish.name, dish.id]));
+const maxExistingId = existing.dishes.reduce((max, dish) => {
+  const match = String(dish.id).match(/^d(\d+)$/);
+  return match ? Math.max(max, Number(match[1])) : max;
+}, 0);
+let nextDishNumber = maxExistingId + 1;
+
 const normalized = new Set();
 const dishes = parsed.map((dish, index) => {
   let normalizedName = normalizeName(dish.name);
   if (normalized.has(normalizedName)) normalizedName = `${normalizedName}-${index + 1}`;
   normalized.add(normalizedName);
+  const id = existingIdByName.get(dish.name) ?? `d${String(nextDishNumber++).padStart(3, "0")}`;
   return {
-    id: `d${String(index + 1).padStart(3, "0")}`,
+    id,
     ...dish,
     normalizedName,
     dataStatus: "ready",
@@ -136,11 +147,11 @@ const counts = dishes.reduce((acc, dish) => {
   return acc;
 }, {});
 
-if (dishes.length !== 180) throw new Error(`Expected 180 dishes, got ${dishes.length}`);
-if (counts.meat !== 98 || counts.veg !== 47 || counts.soup !== 22) {
+if (dishes.length !== 182) throw new Error(`Expected 182 dishes, got ${dishes.length}`);
+if (counts.meat !== 99 || counts.veg !== 48 || counts.soup !== 22) {
   throw new Error(`Unexpected role counts: ${JSON.stringify(counts)}`);
 }
-if (counts.ready !== 180) throw new Error(`Expected 180 ready dishes, got ${counts.ready}`);
+if (counts.ready !== 182) throw new Error(`Expected 182 ready dishes, got ${counts.ready}`);
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, JSON.stringify({ counts, dishes }, null, 2) + "\n", "utf8");

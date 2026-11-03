@@ -20,8 +20,8 @@ import {
 } from "lucide-react";
 import type { DishWithRecipe, PlanDish, PlanResponse } from "@/domain/types";
 import { addDays, formatChineseDate, formatWeekday, friendlyDateLabel } from "@/domain/date";
-import { PROTEIN_LABELS, FLAVOR_LABELS, SPICE_LABELS } from "@/domain/labels";
-import { pickRandomReplacement } from "@/domain/editing";
+import { PROTEIN_LABELS, FLAVOR_LABELS, ROLE_LABELS, SPICE_LABELS } from "@/domain/labels";
+import { filterPickerDishes, pickRandomReplacement } from "@/domain/editing";
 import { useApp } from "./app-provider";
 import { ClientApiError } from "@/lib/client-types";
 import { DishSeal, DishTags, EmptyState, LoadingBlock, Modal, PageHeader, Segmented, Sheet, Spinner, StatusPill } from "./ui";
@@ -104,7 +104,7 @@ export function PlannerPage() {
         : `这桌在建议基础上做过手动调整，确认后会按当前 ${plan.dishes.length} 道菜生成采购清单。`;
     }
     if (plan?.ai?.summary) return plan.ai.summary;
-    if (plan) return "这桌从可推荐菜库中组合，让两位荤菜的主蛋白质错开，并尽量避开最近一周的口味。";
+    if (plan) return "这桌从可推荐菜库中组合，兼顾重复窗口不重样、营养搭配和孩子能吃不辣的菜。";
     return "先读一遍最近一周，再决定明天吃什么。AI 只从可推荐菜库里选菜，不会编造菜名。";
   }, [plan]);
 
@@ -255,12 +255,12 @@ export function PlannerPage() {
     { value: "soup", label: "汤" }
   ];
 
-  const filteredPickerDishes = autoDishes.filter(
-    (dish) =>
-      dish.role === picker.role &&
-      !plan?.dishes.some((current) => current.id === dish.id) &&
-      (!pickerQuery.trim() || dish.name.includes(pickerQuery.trim()))
-  );
+  const trimmedPickerQuery = pickerQuery.trim();
+  const filteredPickerDishes = filterPickerDishes(autoDishes, {
+    query: pickerQuery,
+    role: picker.role,
+    menuDishIds: plan?.dishes.map((dish) => dish.id) ?? []
+  });
 
   return (
     <div className="page planner-page">
@@ -334,7 +334,7 @@ export function PlannerPage() {
             <div className="ai-card-head">
               <span className="ai-label">
                 <i className={info.ai.configured ? "" : "local-dot"} />
-                {plan ? (plan.source === "local" ? "本地规则推荐" : plan.source === "manual" ? (plan.status === "confirmed" ? "已确认 · 手动调整" : "手动调整菜单") : plan.status === "confirmed" ? "已确认菜单" : "AI 已读取最近 7 天") : info.ai.configured ? "AI 已就位" : "本地规则就位"}
+                {plan ? (plan.source === "local" ? "本地规则推荐" : plan.source === "manual" ? (plan.status === "confirmed" ? "已确认 · 手动调整" : "手动调整菜单") : plan.status === "confirmed" ? "已确认菜单" : "AI 已参考重复窗口与草稿") : info.ai.configured ? "AI 已就位" : "本地规则就位"}
               </span>
               <span className="stamp">{(plan ? plan.source === "local" : !info.ai.configured) ? <>本<br />地</> : plan?.source === "manual" ? <>手<br />调</> : <>AI<br />掌勺</>}</span>
             </div>
@@ -441,7 +441,7 @@ export function PlannerPage() {
               </button>
             </div>
           ) : null}
-          <p className="tiny-note">AI 只从菜库选菜；硬规则由服务端再校验一次。确认前的菜单只是草稿，不进历史。</p>
+          <p className="tiny-note">AI 只从菜库选菜；硬规则由服务端再校验一次。确认前的菜单不进历史，但会参与重复窗口去重。</p>
           {plan && isConfirmed ? (
             <p className="tiny-note confirmed-note"><StatusPill tone="sage">已确认</StatusPill> 再次安排同一日期会生成新草稿，确认后覆盖原记录。</p>
           ) : null}
@@ -486,8 +486,20 @@ export function PlannerPage() {
             onChange={(event) => setPickerQuery(event.target.value)}
             placeholder="搜一道菜"
             aria-label="搜索菜品"
+            type="search"
+            autoComplete="off"
+            spellCheck={false}
+            enterKeyHint="search"
+            onKeyDown={(event) => {
+              if (event.nativeEvent.isComposing) return;
+              if (event.key === "Enter" && filteredPickerDishes.length === 1) {
+                event.preventDefault();
+                void chooseDish(filteredPickerDishes[0]);
+              }
+            }}
           />
         </div>
+        {trimmedPickerQuery ? <p className="tiny-note">正在搜索全部菜品；清空搜索后可按荤菜、素菜和汤浏览。</p> : null}
         {pickerLoading ? (
           <LoadingBlock label="正在筛可推荐的菜…" />
         ) : pickerError ? (
@@ -501,7 +513,14 @@ export function PlannerPage() {
             }
           />
         ) : filteredPickerDishes.length === 0 ? (
-          <EmptyState title="这个角色暂时没有可选的菜" body="先到菜库补全食材，或检查忌口与停用设置。" />
+          trimmedPickerQuery ? (
+            <EmptyState
+              title={`没有搜到「${trimmedPickerQuery}」`}
+              body="换个菜名试试，或清空搜索后按荤菜、素菜和汤浏览。"
+            />
+          ) : (
+            <EmptyState title="这个角色暂时没有可选的菜" body="先到菜库补全食材，或检查忌口与停用设置。" />
+          )
         ) : (
           <div className="picker-list">
             {filteredPickerDishes.map((dish) => (
@@ -509,7 +528,7 @@ export function PlannerPage() {
                 <DishSeal dish={dish} size="small" />
                 <div>
                   <strong>{dish.name}</strong>
-                  <small>{PROTEIN_LABELS[dish.protein]} · {SPICE_LABELS[dish.spiceLevel]} · {FLAVOR_LABELS[dish.flavor]}</small>
+                  <small>{ROLE_LABELS[dish.role]} · {PROTEIN_LABELS[dish.protein]} · {SPICE_LABELS[dish.spiceLevel]} · {FLAVOR_LABELS[dish.flavor]}</small>
                 </div>
                 <span className="pick-action">{actionBusy ? <Spinner /> : "选它"}</span>
               </button>
@@ -554,7 +573,7 @@ function EvidenceContent({ data }: { data: PlanResponse }) {
     <div className="evidence">
       <div className="history-days">
         {data.recentMeals.length === 0 ? (
-          <p className="evidence-empty">最近 7 天还没有已确认晚餐，AI 会从菜库和家庭规则开始搭。</p>
+          <p className="evidence-empty">重复窗口内还没有已确认晚餐，AI 会结合现有草稿和家庭规则开始搭。</p>
         ) : data.recentMeals.map((meal) => (
           <div className={`history-day ${meal.dishes.some((dish) => dish.protein === "pork") ? "hot" : ""}`} key={meal.date}>
             <b>{meal.date.slice(8).replace(/^0/, "")}</b>
@@ -587,7 +606,7 @@ function EvidenceContent({ data }: { data: PlanResponse }) {
         {plan?.dishes.map((dish, index) => (
           <div className="reason" key={dish.id}>
             <b>{index + 1}</b>
-            <div><strong>{dish.name}。</strong>{dish.reason ?? "符合蛋白质、辣度、清淡与重复窗口规则。"}</div>
+            <div><strong>{dish.name}。</strong>{dish.reason ?? "符合家庭口味、辣度与重复窗口规则。"}</div>
           </div>
         ))}
         {plan?.ai?.diversity ? (

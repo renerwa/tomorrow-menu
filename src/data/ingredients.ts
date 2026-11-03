@@ -182,7 +182,8 @@ const inputs: IngredientInput[] = [
   { name: "葡萄干", category: "other" },
   { name: "李子", category: "other" },
   { name: "柠檬", category: "other" },
-  { name: "菠萝", category: "other" }
+  { name: "菠萝", category: "other" },
+  { name: "花甲", category: "meat" }
 ];
 
 export const ingredients: Ingredient[] = inputs.map((input, index) => ({

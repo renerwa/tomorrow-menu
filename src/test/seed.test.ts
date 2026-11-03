@@ -3,24 +3,24 @@ import { seedDishes, seedIngredients, seedRecipes } from "@/data/seed";
 import { readyRecipeNames } from "@/data/recipes";
 
 describe("seed menu library", () => {
-  it("contains 180 unique dishes with the agreed role split", () => {
-    expect(seedDishes).toHaveLength(180);
-    expect(new Set(seedDishes.map((dish) => dish.id)).size).toBe(180);
-    expect(new Set(seedDishes.map((dish) => dish.normalizedName)).size).toBe(180);
+  it("contains 182 unique dishes with the agreed role split", () => {
+    expect(seedDishes).toHaveLength(182);
+    expect(new Set(seedDishes.map((dish) => dish.id)).size).toBe(182);
+    expect(new Set(seedDishes.map((dish) => dish.normalizedName)).size).toBe(182);
 
     const counts = seedDishes.reduce<Record<string, number>>((result, dish) => {
       result[dish.role] = (result[dish.role] ?? 0) + 1;
       return result;
     }, {});
-    expect(counts).toMatchObject({ meat: 98, veg: 47, soup: 22, other: 13 });
+    expect(counts).toMatchObject({ meat: 99, veg: 48, soup: 22, other: 13 });
   });
 
-  it("has a complete ingredient list for all 180 dishes", () => {
+  it("has a complete ingredient list for all 182 dishes", () => {
     const ready = seedDishes.filter((dish) => dish.dataStatus === "ready");
-    expect(seedRecipes).toHaveLength(180);
-    expect(ready).toHaveLength(180);
-    expect(ready.filter((dish) => dish.role === "meat")).toHaveLength(98);
-    expect(ready.filter((dish) => dish.role === "veg")).toHaveLength(47);
+    expect(seedRecipes).toHaveLength(182);
+    expect(ready).toHaveLength(182);
+    expect(ready.filter((dish) => dish.role === "meat")).toHaveLength(99);
+    expect(ready.filter((dish) => dish.role === "veg")).toHaveLength(48);
     expect(ready.filter((dish) => dish.role === "soup")).toHaveLength(22);
     expect(ready.filter((dish) => dish.role === "other")).toHaveLength(13);
   });

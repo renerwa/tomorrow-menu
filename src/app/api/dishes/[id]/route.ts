@@ -8,7 +8,7 @@ import { ApiError } from "@/server/errors";
 const patchSchema = z.object({
   name: z.string().trim().min(1).max(40).optional(),
   role: z.enum(["meat", "veg", "soup", "other"]).optional(),
-  protein: z.enum(["pork", "beef", "chicken", "duck", "lamb", "rabbit", "fish", "shrimp", "frog", "squid", "crab", "crayfish", "egg", "other", "none"]).optional(),
+  protein: z.enum(["pork", "beef", "chicken", "duck", "lamb", "rabbit", "fish", "shrimp", "shellfish", "frog", "squid", "crab", "crayfish", "egg", "other", "none"]).optional(),
   spiceLevel: z.number().int().min(0).max(2).optional(),
   flavor: z.enum(["light", "normal", "rich"]).optional(),
   autoPlannable: z.boolean().optional(),

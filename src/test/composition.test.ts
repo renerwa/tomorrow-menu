@@ -95,20 +95,38 @@ describe("selection validation", () => {
     expect(validateSelection([], context, { mode: "manual" })).toContain("菜单至少需要保留一道菜。");
   });
 
-  it("checks generated protein variety, spice limit and one light dish", () => {
+  it("allows two meat dishes with the same protein while checking spice and repeats", () => {
     const pork2 = makeDish({ id: "pork2", name: "红烧肉", protein: "pork", spiceLevel: 1, flavor: "normal" });
     const richVeg = makeDish({ id: "rich-veg", name: "油焖茄子", role: "veg", protein: "none", spiceLevel: 1, flavor: "rich" });
+    expect(validateSelection([pork, pork2, veg], {
+      candidates: [pork, pork2, veg],
+      repeatDishIds: new Set(),
+      settings: makeSettings()
+    })).toEqual([]);
+
     const issues = validateSelection([pork, pork2, richVeg], {
       candidates: [pork, pork2, richVeg],
       repeatDishIds: new Set(["pork2"]),
       settings: makeSettings({ maxSpicyDishes: 1 })
     });
-    expect(issues.join("\n")).toContain("主蛋白质必须不同");
+    expect(issues.join("\n")).not.toContain("主蛋白质必须不同");
     expect(issues.join("\n")).toContain("辣菜有 2 道");
-    expect(issues.join("\n")).toContain("至少需要一道清淡菜");
+    expect(issues.join("\n")).toContain("重复窗口内已经出现过");
+    expect(issues.join("\n")).not.toContain("清淡菜");
   });
 
-  it("turns repeat, spice, light, protein and vegetable issues into manual warnings", () => {
+  it("rejects repeated dishes in generated menus without requiring a light dish", () => {
+    const richVeg = makeDish({ id: "rich-veg", name: "油焖茄子", role: "veg", protein: "none", flavor: "rich" });
+    const issues = validateSelection([pork, beef, richVeg], {
+      candidates: [pork, beef, richVeg],
+      repeatDishIds: new Set(["beef"]),
+      settings: makeSettings()
+    });
+    expect(issues.join("\n")).toContain("重复窗口内已经出现过");
+    expect(issues.join("\n")).not.toContain("清淡菜");
+  });
+
+  it("turns repeat, spice and vegetable issues into manual warnings", () => {
     const pork2 = makeDish({ id: "pork2", name: "红烧肉", protein: "pork", spiceLevel: 1, flavor: "rich" });
     const richSoup = makeDish({ id: "soup2", name: "辣汤", role: "soup", protein: "egg", spiceLevel: 1, flavor: "rich" });
     const warnings = selectionWarnings([pork, pork2, richSoup], {
@@ -118,8 +136,8 @@ describe("selection validation", () => {
     });
     expect(warnings.join("\n")).toContain("重复窗口内已经出现过");
     expect(warnings.join("\n")).toContain("辣菜有 2 道");
-    expect(warnings.join("\n")).toContain("没有清淡菜");
-    expect(warnings.join("\n")).toContain("相同主蛋白质");
+    expect(warnings.join("\n")).not.toContain("没有清淡菜");
+    expect(warnings.join("\n")).not.toContain("相同主蛋白质");
     expect(warnings.join("\n")).toContain("汤菜不替代素菜");
   });
 });

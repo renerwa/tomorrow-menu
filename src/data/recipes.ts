@@ -180,7 +180,9 @@ export const readyRecipeNames: Record<string, string[]> = {
   白凉粉: ["白凉粉", "红糖"],
   凉皮: ["凉皮", "黄瓜", "绿豆芽", "生抽", "醋", "辣椒油", "蒜", "芝麻酱"],
   炸花生: ["花生米", "食用油", "盐"],
-  水煮玉米: ["玉米", "盐"]
+  水煮玉米: ["玉米", "盐"],
+  香煎土豆: ["土豆", "食用油", "盐", "葱"],
+  香辣花甲: ["花甲", "干辣椒", "花椒", "姜", "蒜", "葱", "豆瓣酱", "生抽", "料酒", "白糖"]
 };
 
 export const readyRecipeIngredientIds: Record<string, string[]> = Object.fromEntries(

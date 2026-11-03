@@ -197,7 +197,7 @@ export function SettingsPage() {
         <div className={`ai-state ${info.ai.configured ? "" : "offline"}`}>
           <i /> {info.ai.configured ? `已连接 · ${info.ai.model}` : "未配置 · 当前使用本地规则"}
         </div>
-        <div className="setting-row"><span>每次读取最近 7 天晚餐<small>还需结合未来已安排菜单去重</small></span><StatusPill tone="sage">已启用</StatusPill></div>
+        <div className="setting-row"><span>每次读取重复窗口内菜单<small>已确认菜单用于口味分析，草稿和未来菜单用于去重</small></span><StatusPill tone="sage">已启用</StatusPill></div>
         <div className="setting-row"><span>AI 失败时本地兜底<small>仍能生成 2 荤 1 素，并可选 1 道汤</small></span><StatusPill tone="sage">已启用</StatusPill></div>
         <div className="setting-row"><span>今日 AI 生成次数<small>全局上限 {info.ai.maxDailyCalls} 次 · 单设备 {info.ai.maxCallsPerIpPerDay} 次</small></span><b>{info.ai.callsToday} / {info.ai.maxDailyCalls}</b></div>
         <div className="setting-row"><span><KeyRound size={14} /> API Key 与模型<small>只由部署环境变量提供，浏览器永远不接触</small></span><StatusPill tone="muted">服务端</StatusPill></div>
@@ -205,7 +205,7 @@ export function SettingsPage() {
 
       <section className="setting-group">
         <div className="group-head"><h3><RotateCcw size={16} /> 家庭规则</h3><span>硬规则会由服务端校验</span></div>
-        <Field label="重复天数" hint="与目标日期相差在这个范围内的已确认菜单，不能重复选菜">
+        <Field label="重复天数" hint="与目标日期相差在这个范围内的已确认或草稿菜单，不能重复选菜">
           <Segmented value={repeatDays} options={[3, 5, 7, 10].map((value) => ({ value, label: `${value} 天` }))} onChange={setRepeatDays} ariaLabel="重复天数" />
         </Field>
         <Field label="每餐最多辣菜" hint="汤也计入辣菜数量">

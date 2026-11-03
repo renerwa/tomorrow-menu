@@ -11,3 +11,17 @@ export function pickRandomReplacement<T extends { id: string }>(
   const index = Math.min(pool.length - 1, Math.floor(random() * pool.length));
   return pool[index];
 }
+
+export function filterPickerDishes<T extends { id: string; name: string; normalizedName: string; role: string }>(
+  dishes: T[],
+  options: { query: string; role: string; menuDishIds: Iterable<string> }
+): T[] {
+  const query = options.query.trim();
+  const normalizedQuery = query.normalize("NFKC").toLowerCase().replace(/\s+/g, "");
+  const menuDishIds = new Set(options.menuDishIds);
+  return dishes.filter((dish) => {
+    if (menuDishIds.has(dish.id)) return false;
+    if (!normalizedQuery) return dish.role === options.role;
+    return dish.name.includes(query) || dish.normalizedName.toLowerCase().includes(normalizedQuery);
+  });
+}

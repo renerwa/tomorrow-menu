@@ -15,7 +15,7 @@ import type {
 } from "@/domain/types";
 import { getAiConfig } from "@/ai/config";
 import { AiServiceError } from "@/ai/errors";
-import { requestAiMenu, MENU_PROMPT_VERSION } from "@/ai/menuDecision";
+import { requestAiMenu, MENU_PROMPT_VERSION, type AvoidDish } from "@/ai/menuDecision";
 import {
   countRateLimit,
   getFamily,
@@ -74,8 +74,8 @@ async function loadPlanningContext(targetDate: string): Promise<PlanningContext>
   const [recentPlans, futurePlans, repeatPlans, repeatPlans3] = await Promise.all([
     getPlansBetween(addDays(targetDate, -historyDays), addDays(targetDate, -1), "confirmed"),
     getPlansBetween(addDays(targetDate, 1), addDays(targetDate, repeatWindow), "confirmed"),
-    getPlansBetween(addDays(targetDate, -repeatWindow), addDays(targetDate, repeatWindow), "confirmed"),
-    getPlansBetween(addDays(targetDate, -3), addDays(targetDate, 3), "confirmed")
+    getPlansBetween(addDays(targetDate, -repeatWindow), addDays(targetDate, repeatWindow)),
+    getPlansBetween(addDays(targetDate, -3), addDays(targetDate, 3))
   ]);
 
   const stats = buildMealStats({
@@ -108,6 +108,36 @@ function repeatDishIds(plans: PlanWithDishes[], targetDate: string): Set<string>
       .filter((plan) => plan.plan.targetDate !== targetDate)
       .flatMap((plan) => plan.dishes.map((dish) => dish.id))
   );
+}
+
+function targetDateDishIds(plans: PlanWithDishes[], targetDate: string): Set<string> {
+  return new Set(
+    plans
+      .filter((plan) => plan.plan.targetDate === targetDate)
+      .flatMap((plan) => plan.dishes.map((dish) => dish.id))
+  );
+}
+
+function generationAvoidDishIds(plans: PlanWithDishes[], targetDate: string): Set<string> {
+  return new Set([
+    ...repeatDishIds(plans, targetDate),
+    ...targetDateDishIds(plans, targetDate)
+  ]);
+}
+
+function avoidDishPayload(plans: PlanWithDishes[]): AvoidDish[] {
+  const dishes = new Map<string, AvoidDish>();
+  for (const plan of plans) {
+    for (const dish of plan.dishes) {
+      dishes.set(dish.id, {
+        id: dish.id,
+        name: dish.name,
+        date: plan.plan.targetDate,
+        status: plan.plan.status
+      });
+    }
+  }
+  return [...dishes.values()];
 }
 
 function recentMealPayload(plans: PlanWithDishes[]) {
@@ -185,7 +215,8 @@ async function localFallback(input: {
       settings: context.settings,
       stats: context.stats,
       repeatIds: repeatDishIds(context.repeatPlans, targetDate),
-      repeatIds3Days: repeatDishIds(context.repeatPlans3, targetDate)
+      repeatIds3Days: repeatDishIds(context.repeatPlans3, targetDate),
+      mustExcludeIds: targetDateDishIds(context.repeatPlans, targetDate)
     });
     const reasons = Object.fromEntries(local.dishes.map((dish) => [dish.id, local.reasons[dish.id] ?? "符合家庭规则。"]));
     const outputSnapshot = {
@@ -268,16 +299,19 @@ export async function generatePlan(date: string, request: NextRequest): Promise<
   await recordRateLimit(context.today, "ai-generate", ipHash);
   const startedAt = Date.now();
   try {
+    const avoidDishIds = generationAvoidDishIds(context.repeatPlans, date);
+    const aiCandidates = context.candidates.filter((dish) => !avoidDishIds.has(dish.id));
     const aiResult = await requestAiMenu({
       targetDate: date,
       familyProfile: context.family.profile,
       settings: context.settings,
       recentMeals: recentMealPayload(context.recentPlans),
       futureMealsInWindow: recentMealPayload(context.futurePlans),
+      avoidDishes: avoidDishPayload(context.repeatPlans),
       stats: context.stats,
-      candidates: toAiCandidates(context.candidates, context.recipes, context.ingredients),
-      candidateDishes: context.candidates,
-      repeatDishIds: repeatDishIds(context.repeatPlans, date)
+      candidates: toAiCandidates(aiCandidates, context.recipes, context.ingredients),
+      candidateDishes: aiCandidates,
+      repeatDishIds: avoidDishIds
     });
     const decisionId = await recordAiDecision({
       targetDate: date,

@@ -53,16 +53,14 @@ function compositionScore(dishes: Dish[], stats: MealStats): number {
       const count = stats.proteinCounts[dish.protein] ?? 0;
       score += Math.max(0, 5 - count) * 1.5;
     }
-    if (dish.flavor === "light") score += 3;
-    if (dish.flavor === "rich") score -= 0.8;
-    if (dish.spiceLevel > 0) score -= 0.8;
+    score += dish.spiceLevel === 0 ? 0.5 : -1.2;
+    if (dish.flavor === "rich") score -= 0.4;
   }
   return Math.max(0.2, score);
 }
 
 function isValidCombination(dishes: Dish[], settings: Settings): boolean {
-  if (dishes.filter((dish) => dish.spiceLevel > 0).length > settings.maxSpicyDishes) return false;
-  return dishes.some((dish) => dish.flavor === "light");
+  return dishes.filter((dish) => dish.spiceLevel > 0).length <= settings.maxSpicyDishes;
 }
 
 function buildCombinations(
@@ -82,7 +80,6 @@ function buildCombinations(
     for (let j = i + 1; j < meat.length; j += 1) {
       const first = meat[i];
       const second = meat[j];
-      if (first.protein === second.protein) continue;
       if (first.protein === "none" || first.protein === "other") continue;
       if (second.protein === "none" || second.protein === "other") continue;
       for (const vegetable of vegetables) {
@@ -115,11 +112,18 @@ function buildCombinations(
     : baseCombos.filter((combo) => isValidCombination([...combo.meat, combo.veg], settings));
 }
 
-function reasonForMeat(dish: Dish, stats: MealStats): string {
+function reasonForMeat(dish: Dish, pairedDish: Dish, stats: MealStats): string {
+  const proteinLabel = PROTEIN_LABELS[dish.protein];
   const count = stats.proteinCounts[dish.protein] ?? 0;
-  if (count === 0) return `最近 7 天还没吃${PROTEIN_LABELS[dish.protein]}，这次补上${dish.name}。`;
-  if (count >= 3) return `最近 7 天${PROTEIN_LABELS[dish.protein]}出现 ${count} 次，换一道${dish.name}做蛋白质轮换。`;
-  return `用${dish.name}补一份${PROTEIN_LABELS[dish.protein]}，和另一道荤菜错开。`;
+  if (dish.spiceLevel === 0) return `优先选不辣的${dish.name}，作为孩子也容易接受的荤菜。`;
+  if (count === 0) return `最近 7 天还没吃${proteinLabel}，这次补上${dish.name}。`;
+  if (count >= 3 && dish.protein !== "pork") {
+    return `最近 7 天${proteinLabel}出现 ${count} 次，这次用${dish.name}换换口味。`;
+  }
+  if (dish.protein === pairedDish.protein) {
+    return `${proteinLabel}是家里的常备肉类，${dish.name}与${pairedDish.name}搭配，不强行错开蛋白质。`;
+  }
+  return `用${dish.name}提供${proteinLabel}，与${pairedDish.name}搭配平衡口味。`;
 }
 
 export function buildLocalRecommendation(input: {
@@ -128,15 +132,19 @@ export function buildLocalRecommendation(input: {
   stats: MealStats;
   repeatIds: Set<string>;
   repeatIds3Days: Set<string>;
+  mustExcludeIds?: Set<string>;
   random?: () => number;
 }): LocalRecommendation {
   const random = input.random ?? Math.random;
   const addSoup = input.settings.thirdDishDefault === "soup";
+  const mustExcludeIds = input.mustExcludeIds ?? new Set<string>();
   const attempts: Array<{ window: number; ids: Set<string> }> = [
-    { window: input.settings.repeatDays, ids: input.repeatIds }
+    { window: input.settings.repeatDays, ids: new Set([...input.repeatIds, ...mustExcludeIds]) }
   ];
-  if (input.settings.repeatDays > 3) attempts.push({ window: 3, ids: input.repeatIds3Days });
-  if (input.settings.repeatDays > 0) attempts.push({ window: 0, ids: new Set() });
+  if (input.settings.repeatDays > 3) {
+    attempts.push({ window: 3, ids: new Set([...input.repeatIds3Days, ...mustExcludeIds]) });
+  }
+  if (input.settings.repeatDays > 0) attempts.push({ window: 0, ids: new Set(mustExcludeIds) });
 
   for (const attempt of attempts) {
     const combos = buildCombinations(
@@ -150,24 +158,27 @@ export function buildLocalRecommendation(input: {
       const chosen = weightedPick(combos, random);
       const dishes = [...chosen.meat, chosen.veg, ...(chosen.soup ? [chosen.soup] : [])];
       const reasons: Record<string, string> = {};
-      reasons[chosen.meat[0].id] = reasonForMeat(chosen.meat[0], input.stats);
-      reasons[chosen.meat[1].id] = reasonForMeat(chosen.meat[1], input.stats);
+      reasons[chosen.meat[0].id] = reasonForMeat(chosen.meat[0], chosen.meat[1], input.stats);
+      reasons[chosen.meat[1].id] = reasonForMeat(chosen.meat[1], chosen.meat[0], input.stats);
       reasons[chosen.veg.id] = `配${chosen.veg.name}，保证这桌有一道真正的素菜。`;
       if (chosen.soup) {
         reasons[chosen.soup.id] = `再配${chosen.soup.name}；汤是额外一道，不替代素菜。`;
       }
       const proteins = `${PROTEIN_LABELS[chosen.meat[0].protein]}和${PROTEIN_LABELS[chosen.meat[1].protein]}`;
+      const sameProtein = chosen.meat[0].protein === chosen.meat[1].protein;
       const relaxed = attempt.window < input.settings.repeatDays;
       return {
         dishes,
         historyWindowUsed: attempt.window,
         relaxed,
-        summary: `这桌用了${proteins}，素菜是${chosen.veg.name}${chosen.soup ? `，另配${chosen.soup.name}` : ""}。两道荤菜蛋白质错开${relaxed ? "；近期可选菜不足，已适度放宽重复窗口" : ""}。`,
+        summary: `这桌用了${proteins}，素菜是${chosen.veg.name}${chosen.soup ? `，另配${chosen.soup.name}` : ""}。${sameProtein ? "两道荤菜不强行错开蛋白质" : "荤菜搭配有所变化"}${relaxed ? "；近期可选菜不足，已适度放宽重复窗口" : ""}。`,
         reasons,
         diversity: {
-          protein: `${PROTEIN_LABELS[chosen.meat[0].protein]}与${PROTEIN_LABELS[chosen.meat[1].protein]}错开。`,
+          protein: sameProtein
+            ? `两道荤菜均为${PROTEIN_LABELS[chosen.meat[0].protein]}，不强制蛋白质轮换。`
+            : `${PROTEIN_LABELS[chosen.meat[0].protein]}与${PROTEIN_LABELS[chosen.meat[1].protein]}搭配，兼顾营养与口味变化。`,
           vegetable: `${chosen.veg.name}提供蔬菜${chosen.soup ? `；${chosen.soup.name}是额外的汤菜，不替代素菜。` : "。"}`,
-          flavor: dishes.some((dish) => dish.flavor === "light") ? "至少一道清淡菜，整体不过重。" : "口味适中。"
+          flavor: `${dishes.filter((dish) => dish.spiceLevel > 0).length} 道辣菜，辣度符合设置。`
         }
       };
     }

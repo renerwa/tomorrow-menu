@@ -77,6 +77,8 @@ export function Sheet({
   footer?: ReactNode;
 }) {
   const closeButton = useRef<HTMLButtonElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -84,7 +86,7 @@ export function Sheet({
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") onCloseRef.current();
     };
     document.addEventListener("keydown", onKey);
     document.body.classList.add("sheet-open");
@@ -93,7 +95,7 @@ export function Sheet({
       document.removeEventListener("keydown", onKey);
       document.body.classList.remove("sheet-open");
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!mounted) return null;
   return createPortal(
@@ -133,14 +135,16 @@ export function Modal({
   footer?: ReactNode;
   wide?: boolean;
 }) {
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") onCloseRef.current();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open || typeof document === "undefined") return null;
   return createPortal(
@@ -183,6 +187,7 @@ function dishChar(dish: Pick<Dish, "role" | "protein" | "name">): string {
     rabbit: "兔",
     fish: "鱼",
     shrimp: "虾",
+    shellfish: "贝",
     frog: "蛙",
     squid: "鱿",
     crab: "蟹",
@@ -195,7 +200,7 @@ function dishChar(dish: Pick<Dish, "role" | "protein" | "name">): string {
 function dishTone(dish: Pick<Dish, "role" | "protein">): string {
   if (dish.role === "soup") return "soup";
   if (dish.role === "veg") return "veg";
-  if (dish.protein === "fish" || dish.protein === "shrimp" || dish.protein === "crab" || dish.protein === "squid") return "fish";
+  if (dish.protein === "fish" || dish.protein === "shrimp" || dish.protein === "shellfish" || dish.protein === "crab" || dish.protein === "squid") return "fish";
   if (dish.protein === "beef" || dish.protein === "lamb") return "beef";
   if (dish.protein === "chicken" || dish.protein === "duck" || dish.protein === "egg") return "gold";
   return "pork";

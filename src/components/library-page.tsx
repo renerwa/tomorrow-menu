@@ -293,7 +293,7 @@ export function LibraryPage() {
       <PageHeader
         mark="库"
         title="家庭菜库"
-        subtitle="180 道家常菜 · 只推荐食材齐全的菜"
+        subtitle={data ? `${data.counts.total} 道家常菜 · 只推荐食材齐全的菜` : "家常菜 · 只推荐食材齐全的菜"}
         action={<button className="icon-btn" aria-label="新增自定义菜" onClick={() => setCreateOpen(true)}><Plus size={19} /></button>}
       />
 

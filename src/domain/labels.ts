@@ -9,6 +9,7 @@ export const PROTEIN_LABELS: Record<Protein, string> = {
   rabbit: "兔肉",
   fish: "鱼",
   shrimp: "虾",
+  shellfish: "贝类",
   frog: "牛蛙",
   squid: "鱿鱼",
   crab: "蟹",

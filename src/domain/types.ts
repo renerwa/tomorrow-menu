@@ -9,6 +9,7 @@ export type Protein =
   | "rabbit"
   | "fish"
   | "shrimp"
+  | "shellfish"
   | "frog"
   | "squid"
   | "crab"
